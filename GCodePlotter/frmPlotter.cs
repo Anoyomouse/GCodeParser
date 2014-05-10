@@ -116,7 +116,7 @@ namespace GCodePlotter
 			currentPoint.Y = 0;
 
 			foreach (var plot in lstPlots.Items.Cast<Plot>())
-			{z
+			{
 				plot.PlotPoints.Clear();
 				foreach (var line in plot.GCodeInstructions)
 				{
