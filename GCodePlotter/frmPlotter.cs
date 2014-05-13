@@ -180,16 +180,16 @@ namespace GCodePlotter
 		private void cmdShiftDown_Click(object sender, EventArgs e)
 		{
 			#region Code
-			if (lstPlots.SelectedIndex == (lstPlots.Items.Count - 1) || lstPlots.SelectedItem == null)
-			{
-				return;
-			}
-
-			var obj = lstPlots.SelectedItem;
+			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
-			lstPlots.Items.Remove(obj);
-			lstPlots.Items.Insert(idx + 1, obj);
-			lstPlots.SelectedItem = obj;
+			foreach (var i in objs)
+				lstPlots.Items.Remove(i);
+
+			for(int i = 0; i < objs.Count; i++)
+			{
+				lstPlots.Items.Insert(idx + i + 1, objs[i]);
+				lstPlots.SelectedItems.Add(objs[i]);
+			}
 
 			CalculateGCodePlot();
 			RenderPlots();
@@ -199,16 +199,16 @@ namespace GCodePlotter
 		private void cmdToBottom_Click(object sender, EventArgs e)
 		{
 			#region Code
-			if (lstPlots.SelectedIndex == (lstPlots.Items.Count - 1) || lstPlots.SelectedItem == null)
-			{
-				return;
-			}
-
-			var obj = lstPlots.SelectedItem;
+			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
-			lstPlots.Items.Remove(obj);
-			lstPlots.Items.Add(obj);
-			lstPlots.SelectedItem = obj;
+			foreach (var i in objs)
+				lstPlots.Items.Remove(i);
+
+			for (int i = 0; i < objs.Count; i++)
+			{
+				lstPlots.Items.Add(objs[i]);
+				lstPlots.SelectedItems.Add(objs[i]);
+			}
 
 			CalculateGCodePlot();
 			RenderPlots();
@@ -218,16 +218,16 @@ namespace GCodePlotter
 		private void cmdShiftUp_Click(object sender, EventArgs e)
 		{
 			#region Code
-			if (lstPlots.SelectedIndex == 0 || lstPlots.SelectedItem == null)
-			{
-				return;
-			}
-
-			var obj = lstPlots.SelectedItem;
+			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
-			lstPlots.Items.Remove(obj);
-			lstPlots.Items.Insert(idx - 1, obj);
-			lstPlots.SelectedItem = obj;
+			foreach (var i in objs)
+				lstPlots.Items.Remove(i);
+
+			for (int i = 0; i < objs.Count; i++)
+			{
+				lstPlots.Items.Insert(idx + i - 1, objs[i]);
+				lstPlots.SelectedItems.Add(objs[i]);
+			}
 
 			CalculateGCodePlot();
 			RenderPlots();
@@ -237,16 +237,16 @@ namespace GCodePlotter
 		private void cmdToTop_Click(object sender, EventArgs e)
 		{
 			#region Code
-			if (lstPlots.SelectedIndex == 0 || lstPlots.SelectedItem == null)
-			{
-				return;
-			}
-
-			var obj = lstPlots.SelectedItem;
+			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
-			lstPlots.Items.Remove(obj);
-			lstPlots.Items.Insert(0, obj);
-			lstPlots.SelectedItem = obj;
+			foreach (var i in objs)
+				lstPlots.Items.Remove(i);
+
+			for (int i = 0; i < objs.Count; i++)
+			{
+				lstPlots.Items.Insert(i, objs[i]);
+				lstPlots.SelectedItems.Add(objs[i]);
+			}
 
 			CalculateGCodePlot();
 			RenderPlots();
@@ -260,18 +260,18 @@ namespace GCodePlotter
 			#endregion
 		}
 
-		Plot lastPlot = null;
+		//Plot lastPlot = null;
 		private void SelectPlot(ListBox box)
 		{
 			#region Code
-			Graphics g = Graphics.FromImage(renderImage);
+			/*//Graphics g = Graphics.FromImage(renderImage);
 
 			if (lastPlot != null)
 			{
-				foreach (var data in lastPlot.PlotPoints)
-				{
-					data.DrawSegment(g, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked);
-				}
+				// foreach (var data in lastPlot.PlotPoints)
+				//{
+				//	data.DrawSegment(g, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked);
+				//}
 			}
 
 			var obj = box.SelectedItem;
@@ -279,17 +279,19 @@ namespace GCodePlotter
 			{
 				Plot plot = obj as Plot;
 
-				foreach (var data in plot.PlotPoints)
-				{
-					data.DrawSegment(g, pictureBox1.Height, p: Pens.White, Multiplier: 4, renderG0: checkBox1.Checked);
-				}
+				//foreach (var data in plot.PlotPoints)
+				//{
+				//	data.DrawSegment(g, pictureBox1.Height, highlight: true, Multiplier: 4, renderG0: checkBox1.Checked);
+				//}
 
 				lastPlot = plot;
 			}
 			else
 			{
 				lastPlot = null;
-			}
+			}*/
+
+			RenderPlots();
 
 			pictureBox1.Refresh();
 			#endregion
@@ -299,7 +301,7 @@ namespace GCodePlotter
 		{
 			#region Code
 			var graphics = Graphics.FromImage(renderImage);
-			graphics.Clear(GCodeInstruction.GetColorFor(PenColorList.Background).Color);
+			graphics.Clear(ColorHelper.GetColor(PenColorList.Background));
 
 			var multiplier = 4f;
 			if (radZoomOne.Checked) multiplier = 1;
@@ -309,7 +311,7 @@ namespace GCodePlotter
 
 			var scale = (10 * multiplier);
 
-			Pen gridPen = GCodeInstruction.GetColorFor(PenColorList.GridLines);
+			Pen gridPen = ColorHelper.GetPen(PenColorList.GridLines);
 			for (var x = 1; x < pictureBox1.Width / scale; x++)
 			{
 				for (var y = 1; y < pictureBox1.Height / scale; y++)
@@ -325,9 +327,9 @@ namespace GCodePlotter
 				{
 					foreach (var data in plotItem.PlotPoints)
 					{
-						if (plotItem == lstPlots.SelectedItem)
+						if (lstPlots.SelectedItems.Contains(plotItem))
 						{
-							data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked, p: GCodeInstruction.GetColorFor(PenColorList.LineHighlight));
+							data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked, highlight: true);
 						}
 						else
 						{
@@ -394,6 +396,13 @@ namespace GCodePlotter
 		private void radScaleChange(object sender, EventArgs e)
 		{
 			RenderPlots();
+		}
+
+		private void cmdSettings_Click(object sender, EventArgs e)
+		{
+			SettingsForm frm = new SettingsForm();
+			frm.FormClosed += (s, evt) => this.RenderPlots();
+			frm.Show();
 		}
 	}
 }

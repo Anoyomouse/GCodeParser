@@ -43,19 +43,20 @@
 			this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
 			this.ofdLoadDialog = new System.Windows.Forms.OpenFileDialog();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel3 = new System.Windows.Forms.Panel();
+			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.txtFile = new System.Windows.Forms.TextBox();
 			this.panel5 = new System.Windows.Forms.Panel();
-			this.radZoomOne = new System.Windows.Forms.RadioButton();
-			this.radZoomTwo = new System.Windows.Forms.RadioButton();
-			this.radZoomFour = new System.Windows.Forms.RadioButton();
 			this.radZoomEight = new System.Windows.Forms.RadioButton();
+			this.radZoomFour = new System.Windows.Forms.RadioButton();
+			this.radZoomTwo = new System.Windows.Forms.RadioButton();
+			this.radZoomOne = new System.Windows.Forms.RadioButton();
+			this.cmdSettings = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
-			this.panel2.SuspendLayout();
 			this.panel3.SuspendLayout();
+			this.panel2.SuspendLayout();
 			this.panel4.SuspendLayout();
 			this.panel5.SuspendLayout();
 			this.SuspendLayout();
@@ -97,6 +98,7 @@
 			this.lstPlots.FormattingEnabled = true;
 			this.lstPlots.Location = new System.Drawing.Point(0, 0);
 			this.lstPlots.Name = "lstPlots";
+			this.lstPlots.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
 			this.lstPlots.Size = new System.Drawing.Size(265, 475);
 			this.lstPlots.TabIndex = 4;
 			this.lstPlots.SelectedIndexChanged += new System.EventHandler(this.lstPlots_SelectedIndexChanged);
@@ -203,15 +205,6 @@
 			this.panel1.Size = new System.Drawing.Size(324, 508);
 			this.panel1.TabIndex = 10;
 			// 
-			// panel2
-			// 
-			this.panel2.Controls.Add(this.checkBox1);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel2.Location = new System.Drawing.Point(0, 475);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(324, 33);
-			this.panel2.TabIndex = 9;
-			// 
 			// panel3
 			// 
 			this.panel3.Controls.Add(this.cmdToBottom);
@@ -224,12 +217,22 @@
 			this.panel3.Size = new System.Drawing.Size(59, 475);
 			this.panel3.TabIndex = 10;
 			// 
+			// panel2
+			// 
+			this.panel2.Controls.Add(this.checkBox1);
+			this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panel2.Location = new System.Drawing.Point(0, 475);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(324, 33);
+			this.panel2.TabIndex = 9;
+			// 
 			// panel4
 			// 
 			this.panel4.Controls.Add(this.txtFile);
 			this.panel4.Controls.Add(this.button3);
 			this.panel4.Controls.Add(this.cmdSave);
 			this.panel4.Controls.Add(this.cmdLoad);
+			this.panel4.Controls.Add(this.cmdSettings);
 			this.panel4.Controls.Add(this.button2);
 			this.panel4.Controls.Add(this.button1);
 			this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
@@ -259,16 +262,29 @@
 			this.panel5.Size = new System.Drawing.Size(596, 38);
 			this.panel5.TabIndex = 12;
 			// 
-			// radZoomOne
+			// radZoomEight
 			// 
-			this.radZoomOne.AutoSize = true;
-			this.radZoomOne.Location = new System.Drawing.Point(13, 12);
-			this.radZoomOne.Name = "radZoomOne";
-			this.radZoomOne.Size = new System.Drawing.Size(51, 17);
-			this.radZoomOne.TabIndex = 0;
-			this.radZoomOne.Text = "x0.25";
-			this.radZoomOne.UseVisualStyleBackColor = true;
-			this.radZoomOne.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			this.radZoomEight.AutoSize = true;
+			this.radZoomEight.Location = new System.Drawing.Point(262, 12);
+			this.radZoomEight.Name = "radZoomEight";
+			this.radZoomEight.Size = new System.Drawing.Size(100, 17);
+			this.radZoomEight.TabIndex = 0;
+			this.radZoomEight.Text = "x2 (Double size)";
+			this.radZoomEight.UseVisualStyleBackColor = true;
+			this.radZoomEight.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			// 
+			// radZoomFour
+			// 
+			this.radZoomFour.AutoSize = true;
+			this.radZoomFour.Checked = true;
+			this.radZoomFour.Location = new System.Drawing.Point(172, 12);
+			this.radZoomFour.Name = "radZoomFour";
+			this.radZoomFour.Size = new System.Drawing.Size(84, 17);
+			this.radZoomFour.TabIndex = 0;
+			this.radZoomFour.TabStop = true;
+			this.radZoomFour.Text = "x1 (Full Size)";
+			this.radZoomFour.UseVisualStyleBackColor = true;
+			this.radZoomFour.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
 			// radZoomTwo
 			// 
@@ -281,28 +297,26 @@
 			this.radZoomTwo.UseVisualStyleBackColor = true;
 			this.radZoomTwo.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
-			// radZoomFour
+			// radZoomOne
 			// 
-			this.radZoomFour.AutoSize = true;
-			this.radZoomFour.Checked = true;
-			this.radZoomFour.Location = new System.Drawing.Point(172, 12);
-			this.radZoomFour.Name = "radZoomFour";
-			this.radZoomFour.Size = new System.Drawing.Size(84, 17);
-			this.radZoomFour.TabIndex = 0;
-			this.radZoomFour.Text = "x1 (Full Size)";
-			this.radZoomFour.UseVisualStyleBackColor = true;
-			this.radZoomFour.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			this.radZoomOne.AutoSize = true;
+			this.radZoomOne.Location = new System.Drawing.Point(13, 12);
+			this.radZoomOne.Name = "radZoomOne";
+			this.radZoomOne.Size = new System.Drawing.Size(51, 17);
+			this.radZoomOne.TabIndex = 0;
+			this.radZoomOne.Text = "x0.25";
+			this.radZoomOne.UseVisualStyleBackColor = true;
+			this.radZoomOne.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
-			// radZoomEight
+			// cmdSettings
 			// 
-			this.radZoomEight.AutoSize = true;
-			this.radZoomEight.Location = new System.Drawing.Point(262, 12);
-			this.radZoomEight.Name = "radZoomEight";
-			this.radZoomEight.Size = new System.Drawing.Size(100, 17);
-			this.radZoomEight.TabIndex = 0;
-			this.radZoomEight.Text = "x2 (Double size)";
-			this.radZoomEight.UseVisualStyleBackColor = true;
-			this.radZoomEight.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			this.cmdSettings.Location = new System.Drawing.Point(10, 319);
+			this.cmdSettings.Name = "cmdSettings";
+			this.cmdSettings.Size = new System.Drawing.Size(75, 23);
+			this.cmdSettings.TabIndex = 2;
+			this.cmdSettings.Text = "Settings";
+			this.cmdSettings.UseVisualStyleBackColor = true;
+			this.cmdSettings.Click += new System.EventHandler(this.cmdSettings_Click);
 			// 
 			// frmPlotter
 			// 
@@ -320,9 +334,9 @@
 			this.ResizeEnd += new System.EventHandler(this.frmPlotter_ResizeEnd);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.panel1.ResumeLayout(false);
+			this.panel3.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
-			this.panel3.ResumeLayout(false);
 			this.panel4.ResumeLayout(false);
 			this.panel4.PerformLayout();
 			this.panel5.ResumeLayout(false);
@@ -357,6 +371,7 @@
 		private System.Windows.Forms.RadioButton radZoomTwo;
 		private System.Windows.Forms.RadioButton radZoomOne;
 		private System.Windows.Forms.RadioButton radZoomEight;
+		private System.Windows.Forms.Button cmdSettings;
     }
 }
 

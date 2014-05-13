@@ -59,27 +59,104 @@ namespace GCodePlotter
 		GridLines
 	}
 
+	public static class ColorHelper
+	{
+		private static IDictionary<PenColorList, Pen> _penList = new Dictionary<PenColorList, Pen>();
+		private static IDictionary<PenColorList, Color> _colorList = new Dictionary<PenColorList, Color>();
+
+		private static Color GetDefaultColor(PenColorList list)
+		{
+			if (list == PenColorList.RapidMove) return Color.Red;
+			if (list == PenColorList.NormalMove) return Color.DodgerBlue;
+			if (list == PenColorList.CWArc) return Color.Lime;
+			if (list == PenColorList.CCWArc) return Color.Yellow;
+			if (list == PenColorList.RapidMoveHilight) return Color.Salmon;
+			if (list == PenColorList.LineHighlight) return Color.White;
+			if (list == PenColorList.Background) return Color.FromArgb(0x20, 0x20, 0x20);
+			if (list == PenColorList.GridLines) return Color.DimGray;
+			return Color.White;
+		}
+
+		public static Color GetColor(PenColorList type)
+		{
+			#region Code
+			if (!_colorList.ContainsKey(type))
+			{
+				var value = QuickSettings.Get[string.Format("Color{0}", type)];
+				if (string.IsNullOrWhiteSpace(value))
+				{
+					_colorList[type] = GetDefaultColor(type);
+				}
+				else
+				{
+					try
+					{
+						if (value.Contains(','))
+						{
+							var bits = value.Split(',');
+							var r = int.Parse(bits[0]);
+							var g = int.Parse(bits[1]);
+							var b = int.Parse(bits[2]);
+							_colorList[type] = Color.FromArgb(r, g, b);
+						}
+						else
+						{
+							_colorList[type] = Color.FromName(value);
+						}
+					}
+					catch (Exception e)
+					{
+						_colorList[type] = GetDefaultColor(type);
+					}
+				}
+			}
+
+			return _colorList[type];
+			#endregion
+		}
+
+		public static void SetColor(PenColorList type, Color newColor)
+		{
+			#region Code
+			var value = Convert.ToString(newColor);
+			if (_colorList.ContainsKey(type))
+			{
+				_colorList[type] = newColor;
+				if (_penList.ContainsKey(type)) _penList[type] = new Pen(newColor, 1);
+				else _penList.Add(type, new Pen(newColor, 1));
+			}
+			else
+			{
+				_colorList.Add(type, newColor);
+				_penList.Add(type, new Pen(newColor, 1));
+			}
+
+			QuickSettings.Get[string.Format("Color{0}", type)] = string.Format("{0},{1},{2}", newColor.R, newColor.G, newColor.B);
+			#endregion
+		}
+
+		public static Pen GetPen(PenColorList type)
+		{
+			#region Code
+			if (!_penList.ContainsKey(type))
+			{
+				if (type == PenColorList.LineHighlight)
+					_penList[type] = new Pen(GetColor(type), 2f);
+				else
+					_penList[type] = new Pen(GetColor(type), 1f);
+			}
+
+			return _penList[type];
+			#endregion
+		}
+	}
+
 	public class GCodeInstruction
 	{
 		//public const float Multiplier = 1;
 		public const float CurveSection = 1;
 
 		public static bool AbsoluteMode = true;
-
-		public static Pen GetColorFor(PenColorList list)
-		{
-			#region Code
-			if (list == PenColorList.RapidMove) return Pens.Red;
-			if (list == PenColorList.NormalMove) return Pens.DodgerBlue;
-			if (list == PenColorList.CWArc) return Pens.Lime;
-			if (list == PenColorList.CCWArc) return Pens.Yellow;
-			if (list == PenColorList.RapidMoveHilight) return Pens.Salmon;
-			if (list == PenColorList.LineHighlight) return Pens.White;
-			if (list == PenColorList.Background) return new Pen(Color.FromArgb(0x20, 0x20, 0x20), 1);
-			if (list == PenColorList.GridLines) return Pens.DarkGray;
-			return Pens.White;
-			#endregion
-		}
 
 		public GCodeInstruction(string line)
 		{
@@ -283,7 +360,7 @@ namespace GCodePlotter
 
 			if (CommandEnum == CommandList.RapidMove || CommandEnum == CommandList.NormalMove)
 			{
-				var line = new LinePoints(currentPoint, pos, GetColorFor(CommandEnum == CommandList.RapidMove ? PenColorList.RapidMove : PenColorList.NormalMove));
+				var line = new LinePoints(currentPoint, pos, CommandEnum == CommandList.RapidMove ? PenColorList.RapidMove : PenColorList.NormalMove);
 				currentPoint.X = pos.X;
 				currentPoint.Y = pos.Y;
 				return new List<LinePoints>() { line };
@@ -363,7 +440,7 @@ namespace GCodePlotter
 			PointF newPoint = new PointF(current.X, current.Y);
 			PointF lastPoint = new PointF(current.X, current.Y);
 			List<LinePoints> output = new List<LinePoints>();
-			Pen p = GetColorFor(clockwise ? PenColorList.CWArc : PenColorList.CCWArc);
+			var p = clockwise ? PenColorList.CWArc : PenColorList.CCWArc;
 			for (s = 1; s <= steps; s++)
 			{
 				// Forwards for CCW, backwards for CW
@@ -389,7 +466,7 @@ namespace GCodePlotter
 
 	public struct LinePoints
 	{
-		public LinePoints(PointF start, PointF end, Pen pen)
+		public LinePoints(PointF start, PointF end, PenColorList pen)
 			: this()
 		{
 			#region Code
@@ -401,7 +478,7 @@ namespace GCodePlotter
 			#endregion
 		}
 
-		public LinePoints(float x1, float y1, float x2, float y2, Pen pen)
+		public LinePoints(float x1, float y1, float x2, float y2, PenColorList pen)
 			: this()
 		{
 			#region Code
@@ -417,28 +494,28 @@ namespace GCodePlotter
 		public float Y1 { get; set; }
 		public float X2 { get; set; }
 		public float Y2 { get; set; }
-		public Pen Pen { get; set; }
+		public PenColorList Pen { get; set; }
 
-		public void DrawSegment(Graphics g, int height, Pen p = null, float Multiplier = 1, bool renderG0 = true)
+		public void DrawSegment(Graphics g, int height, bool highlight = false, float Multiplier = 1, bool renderG0 = true)
 		{
 			#region Code
-			if (Pen == GCodeInstruction.GetColorFor(PenColorList.RapidMove) && !renderG0)
+			if (Pen == PenColorList.RapidMove && !renderG0)
 			{
 				return;
 			}
-			else if (Pen == GCodeInstruction.GetColorFor(PenColorList.RapidMove) && p != null)
+			else if (Pen == PenColorList.RapidMove && highlight)
 			{
-				g.DrawLine(GCodeInstruction.GetColorFor(PenColorList.RapidMoveHilight), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(ColorHelper.GetPen(PenColorList.RapidMoveHilight), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
 				return;
 			}
 
-			if (p != null)
+			if (highlight)
 			{
-				g.DrawLine(p, X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(ColorHelper.GetPen(PenColorList.LineHighlight), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
 			}
 			else
 			{
-				g.DrawLine(Pen, X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(ColorHelper.GetPen(Pen), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
 			}
 			#endregion
 		}
