@@ -45,6 +45,7 @@ namespace GCodePlotter
 					txtFile.Text = fil.Name;
 					txtFile.Tag = fil.FullName;
 					Application.DoEvents();
+					button1.Enabled = true;
 					button1.PerformClick();
 				}
 			}
@@ -160,9 +161,6 @@ namespace GCodePlotter
 		private void button2_Click(object sender, EventArgs e)
 		{
 			#region Code
-			Graphics g = Graphics.FromImage(renderImage);
-			g.Clear(Color.FromArgb(0x20, 0x20, 0x20));
-
 			RenderPlots();
 			#endregion
 		}
@@ -301,37 +299,40 @@ namespace GCodePlotter
 		{
 			#region Code
 			var graphics = Graphics.FromImage(renderImage);
-			graphics.Clear(Color.FromArgb(0x20, 0x20, 0x20));
+			graphics.Clear(GCodeInstruction.GetColorFor(PenColorList.Background).Color);
 
 			var multiplier = 4f;
 			if (radZoomOne.Checked) multiplier = 1;
 			else if (radZoomTwo.Checked) multiplier = 2;
-			else if (radZoomHalf.Checked) multiplier = 0.5f;
 			else if (radZoomFour.Checked) multiplier = 4;
 			else if (radZoomEight.Checked) multiplier = 8;
 
 			var scale = (10 * multiplier);
 
+			Pen gridPen = GCodeInstruction.GetColorFor(PenColorList.GridLines);
 			for (var x = 1; x < pictureBox1.Width / scale; x++)
 			{
 				for (var y = 1; y < pictureBox1.Height / scale; y++)
 				{
-					graphics.DrawLine(Pens.Gray, x * scale, 0, x* scale, pictureBox1.Height);
-					graphics.DrawLine(Pens.Gray, 0, pictureBox1.Height - (y * scale), pictureBox1.Width, pictureBox1.Height - (y * scale));
+					graphics.DrawLine(gridPen, x * scale, 0, x * scale, pictureBox1.Height);
+					graphics.DrawLine(gridPen, 0, pictureBox1.Height - (y * scale), pictureBox1.Width, pictureBox1.Height - (y * scale));
 				}
 			}
 
-			foreach (Plot plotItem in myPlots)
+			if (myPlots != null && myPlots.Count > 0)
 			{
-				foreach (var data in plotItem.PlotPoints)
+				foreach (Plot plotItem in myPlots)
 				{
-					if (plotItem == lstPlots.SelectedItem)
+					foreach (var data in plotItem.PlotPoints)
 					{
-						data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked, p: Pens.White);
-					}
-					else
-					{
-						data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked);
+						if (plotItem == lstPlots.SelectedItem)
+						{
+							data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked, p: GCodeInstruction.GetColorFor(PenColorList.LineHighlight));
+						}
+						else
+						{
+							data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked);
+						}
 					}
 				}
 			}

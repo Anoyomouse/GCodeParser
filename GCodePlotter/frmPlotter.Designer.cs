@@ -51,7 +51,6 @@
 			this.radZoomOne = new System.Windows.Forms.RadioButton();
 			this.radZoomTwo = new System.Windows.Forms.RadioButton();
 			this.radZoomFour = new System.Windows.Forms.RadioButton();
-			this.radZoomHalf = new System.Windows.Forms.RadioButton();
 			this.radZoomEight = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
@@ -253,7 +252,6 @@
 			this.panel5.Controls.Add(this.radZoomEight);
 			this.panel5.Controls.Add(this.radZoomFour);
 			this.panel5.Controls.Add(this.radZoomTwo);
-			this.panel5.Controls.Add(this.radZoomHalf);
 			this.panel5.Controls.Add(this.radZoomOne);
 			this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel5.Location = new System.Drawing.Point(5, 475);
@@ -264,7 +262,7 @@
 			// radZoomOne
 			// 
 			this.radZoomOne.AutoSize = true;
-			this.radZoomOne.Location = new System.Drawing.Point(86, 12);
+			this.radZoomOne.Location = new System.Drawing.Point(13, 12);
 			this.radZoomOne.Name = "radZoomOne";
 			this.radZoomOne.Size = new System.Drawing.Size(51, 17);
 			this.radZoomOne.TabIndex = 0;
@@ -275,7 +273,7 @@
 			// radZoomTwo
 			// 
 			this.radZoomTwo.AutoSize = true;
-			this.radZoomTwo.Location = new System.Drawing.Point(143, 12);
+			this.radZoomTwo.Location = new System.Drawing.Point(70, 12);
 			this.radZoomTwo.Name = "radZoomTwo";
 			this.radZoomTwo.Size = new System.Drawing.Size(96, 17);
 			this.radZoomTwo.TabIndex = 0;
@@ -287,7 +285,7 @@
 			// 
 			this.radZoomFour.AutoSize = true;
 			this.radZoomFour.Checked = true;
-			this.radZoomFour.Location = new System.Drawing.Point(245, 12);
+			this.radZoomFour.Location = new System.Drawing.Point(172, 12);
 			this.radZoomFour.Name = "radZoomFour";
 			this.radZoomFour.Size = new System.Drawing.Size(84, 17);
 			this.radZoomFour.TabIndex = 0;
@@ -295,21 +293,10 @@
 			this.radZoomFour.UseVisualStyleBackColor = true;
 			this.radZoomFour.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
-			// radZoomHalf
-			// 
-			this.radZoomHalf.AutoSize = true;
-			this.radZoomHalf.Location = new System.Drawing.Point(23, 12);
-			this.radZoomHalf.Name = "radZoomHalf";
-			this.radZoomHalf.Size = new System.Drawing.Size(57, 17);
-			this.radZoomHalf.TabIndex = 0;
-			this.radZoomHalf.Text = "x0.125";
-			this.radZoomHalf.UseVisualStyleBackColor = true;
-			this.radZoomHalf.CheckedChanged += new System.EventHandler(this.radScaleChange);
-			// 
 			// radZoomEight
 			// 
 			this.radZoomEight.AutoSize = true;
-			this.radZoomEight.Location = new System.Drawing.Point(335, 12);
+			this.radZoomEight.Location = new System.Drawing.Point(262, 12);
 			this.radZoomEight.Name = "radZoomEight";
 			this.radZoomEight.Size = new System.Drawing.Size(100, 17);
 			this.radZoomEight.TabIndex = 0;
@@ -368,7 +355,6 @@
 		private System.Windows.Forms.Panel panel5;
 		private System.Windows.Forms.RadioButton radZoomFour;
 		private System.Windows.Forms.RadioButton radZoomTwo;
-		private System.Windows.Forms.RadioButton radZoomHalf;
 		private System.Windows.Forms.RadioButton radZoomOne;
 		private System.Windows.Forms.RadioButton radZoomEight;
     }

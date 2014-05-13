@@ -47,12 +47,39 @@ namespace GCodePlotter
 		Other = 99
 	}
 
+	public enum PenColorList
+	{
+		RapidMove,
+		NormalMove,
+		CWArc,
+		CCWArc,
+		RapidMoveHilight,
+		LineHighlight,
+		Background,
+		GridLines
+	}
+
 	public class GCodeInstruction
 	{
 		//public const float Multiplier = 1;
 		public const float CurveSection = 1;
 
 		public static bool AbsoluteMode = true;
+
+		public static Pen GetColorFor(PenColorList list)
+		{
+			#region Code
+			if (list == PenColorList.RapidMove) return Pens.Red;
+			if (list == PenColorList.NormalMove) return Pens.DodgerBlue;
+			if (list == PenColorList.CWArc) return Pens.Lime;
+			if (list == PenColorList.CCWArc) return Pens.Yellow;
+			if (list == PenColorList.RapidMoveHilight) return Pens.Salmon;
+			if (list == PenColorList.LineHighlight) return Pens.White;
+			if (list == PenColorList.Background) return new Pen(Color.FromArgb(0x20, 0x20, 0x20), 1);
+			if (list == PenColorList.GridLines) return Pens.DarkGray;
+			return Pens.White;
+			#endregion
+		}
 
 		public GCodeInstruction(string line)
 		{
@@ -256,7 +283,7 @@ namespace GCodePlotter
 
 			if (CommandEnum == CommandList.RapidMove || CommandEnum == CommandList.NormalMove)
 			{
-				var line = new LinePoints(currentPoint, pos, CommandEnum == CommandList.RapidMove ? Pens.Red : Pens.Blue);
+				var line = new LinePoints(currentPoint, pos, GetColorFor(CommandEnum == CommandList.RapidMove ? PenColorList.RapidMove : PenColorList.NormalMove));
 				currentPoint.X = pos.X;
 				currentPoint.Y = pos.Y;
 				return new List<LinePoints>() { line };
@@ -336,7 +363,7 @@ namespace GCodePlotter
 			PointF newPoint = new PointF(current.X, current.Y);
 			PointF lastPoint = new PointF(current.X, current.Y);
 			List<LinePoints> output = new List<LinePoints>();
-			Pen p = clockwise ? Pens.Lime: Pens.Yellow;
+			Pen p = GetColorFor(clockwise ? PenColorList.CWArc : PenColorList.CCWArc);
 			for (s = 1; s <= steps; s++)
 			{
 				// Forwards for CCW, backwards for CW
@@ -395,13 +422,13 @@ namespace GCodePlotter
 		public void DrawSegment(Graphics g, int height, Pen p = null, float Multiplier = 1, bool renderG0 = true)
 		{
 			#region Code
-			if (Pen == Pens.Red && !renderG0)
+			if (Pen == GCodeInstruction.GetColorFor(PenColorList.RapidMove) && !renderG0)
 			{
 				return;
 			}
-			else if (Pen == Pens.Red && p != null)
+			else if (Pen == GCodeInstruction.GetColorFor(PenColorList.RapidMove) && p != null)
 			{
-				g.DrawLine(Pens.Salmon, X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(GCodeInstruction.GetColorFor(PenColorList.RapidMoveHilight), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
 				return;
 			}
 
