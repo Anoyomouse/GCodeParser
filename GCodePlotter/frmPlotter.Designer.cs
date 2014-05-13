@@ -47,11 +47,18 @@
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.txtFile = new System.Windows.Forms.TextBox();
+			this.panel5 = new System.Windows.Forms.Panel();
+			this.radZoomOne = new System.Windows.Forms.RadioButton();
+			this.radZoomTwo = new System.Windows.Forms.RadioButton();
+			this.radZoomFour = new System.Windows.Forms.RadioButton();
+			this.radZoomHalf = new System.Windows.Forms.RadioButton();
+			this.radZoomEight = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.panel4.SuspendLayout();
+			this.panel5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
@@ -60,7 +67,7 @@
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox1.Location = new System.Drawing.Point(5, 5);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(596, 508);
+			this.pictureBox1.Size = new System.Drawing.Size(596, 470);
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			// 
@@ -241,12 +248,82 @@
 			this.txtFile.TabIndex = 10;
 			this.txtFile.TextChanged += new System.EventHandler(this.txtFile_TextChanged);
 			// 
+			// panel5
+			// 
+			this.panel5.Controls.Add(this.radZoomEight);
+			this.panel5.Controls.Add(this.radZoomFour);
+			this.panel5.Controls.Add(this.radZoomTwo);
+			this.panel5.Controls.Add(this.radZoomHalf);
+			this.panel5.Controls.Add(this.radZoomOne);
+			this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panel5.Location = new System.Drawing.Point(5, 475);
+			this.panel5.Name = "panel5";
+			this.panel5.Size = new System.Drawing.Size(596, 38);
+			this.panel5.TabIndex = 12;
+			// 
+			// radZoomOne
+			// 
+			this.radZoomOne.AutoSize = true;
+			this.radZoomOne.Location = new System.Drawing.Point(86, 12);
+			this.radZoomOne.Name = "radZoomOne";
+			this.radZoomOne.Size = new System.Drawing.Size(51, 17);
+			this.radZoomOne.TabIndex = 0;
+			this.radZoomOne.Text = "x0.25";
+			this.radZoomOne.UseVisualStyleBackColor = true;
+			this.radZoomOne.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			// 
+			// radZoomTwo
+			// 
+			this.radZoomTwo.AutoSize = true;
+			this.radZoomTwo.Location = new System.Drawing.Point(143, 12);
+			this.radZoomTwo.Name = "radZoomTwo";
+			this.radZoomTwo.Size = new System.Drawing.Size(96, 17);
+			this.radZoomTwo.TabIndex = 0;
+			this.radZoomTwo.Text = "x0.5 (Half Size)";
+			this.radZoomTwo.UseVisualStyleBackColor = true;
+			this.radZoomTwo.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			// 
+			// radZoomFour
+			// 
+			this.radZoomFour.AutoSize = true;
+			this.radZoomFour.Checked = true;
+			this.radZoomFour.Location = new System.Drawing.Point(245, 12);
+			this.radZoomFour.Name = "radZoomFour";
+			this.radZoomFour.Size = new System.Drawing.Size(84, 17);
+			this.radZoomFour.TabIndex = 0;
+			this.radZoomFour.Text = "x1 (Full Size)";
+			this.radZoomFour.UseVisualStyleBackColor = true;
+			this.radZoomFour.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			// 
+			// radZoomHalf
+			// 
+			this.radZoomHalf.AutoSize = true;
+			this.radZoomHalf.Location = new System.Drawing.Point(23, 12);
+			this.radZoomHalf.Name = "radZoomHalf";
+			this.radZoomHalf.Size = new System.Drawing.Size(57, 17);
+			this.radZoomHalf.TabIndex = 0;
+			this.radZoomHalf.Text = "x0.125";
+			this.radZoomHalf.UseVisualStyleBackColor = true;
+			this.radZoomHalf.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			// 
+			// radZoomEight
+			// 
+			this.radZoomEight.AutoSize = true;
+			this.radZoomEight.Location = new System.Drawing.Point(335, 12);
+			this.radZoomEight.Name = "radZoomEight";
+			this.radZoomEight.Size = new System.Drawing.Size(100, 17);
+			this.radZoomEight.TabIndex = 0;
+			this.radZoomEight.Text = "x2 (Double size)";
+			this.radZoomEight.UseVisualStyleBackColor = true;
+			this.radZoomEight.CheckedChanged += new System.EventHandler(this.radScaleChange);
+			// 
 			// frmPlotter
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1101, 518);
 			this.Controls.Add(this.pictureBox1);
+			this.Controls.Add(this.panel5);
 			this.Controls.Add(this.panel4);
 			this.Controls.Add(this.panel1);
 			this.Name = "frmPlotter";
@@ -261,6 +338,8 @@
 			this.panel3.ResumeLayout(false);
 			this.panel4.ResumeLayout(false);
 			this.panel4.PerformLayout();
+			this.panel5.ResumeLayout(false);
+			this.panel5.PerformLayout();
 			this.ResumeLayout(false);
 
         }
@@ -286,6 +365,12 @@
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.Panel panel4;
 		private System.Windows.Forms.TextBox txtFile;
+		private System.Windows.Forms.Panel panel5;
+		private System.Windows.Forms.RadioButton radZoomFour;
+		private System.Windows.Forms.RadioButton radZoomTwo;
+		private System.Windows.Forms.RadioButton radZoomHalf;
+		private System.Windows.Forms.RadioButton radZoomOne;
+		private System.Windows.Forms.RadioButton radZoomEight;
     }
 }
 

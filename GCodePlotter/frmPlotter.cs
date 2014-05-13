@@ -162,7 +162,8 @@ namespace GCodePlotter
 			#region Code
 			Graphics g = Graphics.FromImage(renderImage);
 			g.Clear(Color.FromArgb(0x20, 0x20, 0x20));
-			pictureBox1.Refresh();
+
+			RenderPlots();
 			#endregion
 		}
 
@@ -301,17 +302,36 @@ namespace GCodePlotter
 			#region Code
 			var graphics = Graphics.FromImage(renderImage);
 			graphics.Clear(Color.FromArgb(0x20, 0x20, 0x20));
+
+			var multiplier = 4f;
+			if (radZoomOne.Checked) multiplier = 1;
+			else if (radZoomTwo.Checked) multiplier = 2;
+			else if (radZoomHalf.Checked) multiplier = 0.5f;
+			else if (radZoomFour.Checked) multiplier = 4;
+			else if (radZoomEight.Checked) multiplier = 8;
+
+			var scale = (10 * multiplier);
+
+			for (var x = 1; x < pictureBox1.Width / scale; x++)
+			{
+				for (var y = 1; y < pictureBox1.Height / scale; y++)
+				{
+					graphics.DrawLine(Pens.Gray, x * scale, 0, x* scale, pictureBox1.Height);
+					graphics.DrawLine(Pens.Gray, 0, pictureBox1.Height - (y * scale), pictureBox1.Width, pictureBox1.Height - (y * scale));
+				}
+			}
+
 			foreach (Plot plotItem in myPlots)
 			{
 				foreach (var data in plotItem.PlotPoints)
 				{
 					if (plotItem == lstPlots.SelectedItem)
 					{
-						data.DrawSegment(graphics, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked, p: Pens.White);
+						data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked, p: Pens.White);
 					}
 					else
 					{
-						data.DrawSegment(graphics, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked);
+						data.DrawSegment(graphics, pictureBox1.Height, Multiplier: multiplier, renderG0: checkBox1.Checked);
 					}
 				}
 			}
@@ -368,6 +388,11 @@ namespace GCodePlotter
 
 			RenderPlots();
 			#endregion
+		}
+
+		private void radScaleChange(object sender, EventArgs e)
+		{
+			RenderPlots();
 		}
 	}
 }
