@@ -182,12 +182,20 @@ namespace GCodePlotter
 			#region Code
 			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
+			if (idx >= lstPlots.Items.Count - objs.Count)
+			{
+				idx = lstPlots.Items.Count - objs.Count;
+			}
+
 			foreach (var i in objs)
 				lstPlots.Items.Remove(i);
 
 			for(int i = 0; i < objs.Count; i++)
 			{
-				lstPlots.Items.Insert(idx + i + 1, objs[i]);
+				if ((idx + i) >= lstPlots.Items.Count)
+					lstPlots.Items.Add(objs[i]);
+				else
+					lstPlots.Items.Insert(idx + i + 1, objs[i]);
 				lstPlots.SelectedItems.Add(objs[i]);
 			}
 
@@ -220,6 +228,11 @@ namespace GCodePlotter
 			#region Code
 			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
+			if (idx < 1)
+			{
+				idx = 1;
+			}
+
 			foreach (var i in objs)
 				lstPlots.Items.Remove(i);
 
