@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickSettings.cs" />
     <Compile Include="SimpleGCodeParser.cs" />
     <EmbeddedResource Include="frmPlotter.resx">
       <DependentUpon>frmPlotter.cs</DependentUpon>

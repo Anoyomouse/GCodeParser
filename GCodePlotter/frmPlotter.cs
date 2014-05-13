@@ -34,6 +34,20 @@ namespace GCodePlotter
 
 				pictureBox1.Image = renderImage;
 			}
+
+			var lastFile = QuickSettings.Get["LastOpenedFile"];
+			if (!string.IsNullOrWhiteSpace(lastFile))
+			{
+				// Load data here!
+				FileInfo fil = new FileInfo(lastFile);
+				if (fil.Exists)
+				{
+					txtFile.Text = fil.Name;
+					txtFile.Tag = fil.FullName;
+					Application.DoEvents();
+					button1.PerformClick();
+				}
+			}
 			#endregion
 		}
 
@@ -43,7 +57,12 @@ namespace GCodePlotter
 		private void button1_Click(object sender, EventArgs e)
 		{
 			#region Code
-			ParseText(textBox1.Text);
+			FileInfo file = new FileInfo(txtFile.Tag.ToString());
+			StreamReader tr = file.OpenText();
+			string data = tr.ReadToEnd();
+			tr.Close();
+
+			ParseText(data);
 			#endregion
 		}
 
@@ -122,6 +141,7 @@ namespace GCodePlotter
 
 		private void CalculateGCodePlot()
 		{
+			#region Code
 			PointF currentPoint = new PointF(0, 0);
 			currentPoint.X = 0;
 			currentPoint.Y = 0;
@@ -134,17 +154,12 @@ namespace GCodePlotter
 					plot.PlotPoints.AddRange(line.RenderCode(ref currentPoint));
 				}
 			}
-		}
-
-		private void pictureBox1_Paint(object sender, PaintEventArgs e)
-		{
+			#endregion
 		}
 
 		private void button2_Click(object sender, EventArgs e)
 		{
 			#region Code
-			textBox1.Text = string.Empty;
-
 			Graphics g = Graphics.FromImage(renderImage);
 			g.Clear(Color.FromArgb(0x20, 0x20, 0x20));
 			pictureBox1.Refresh();
@@ -318,12 +333,40 @@ namespace GCodePlotter
 					return;
 				}
 
+				QuickSettings.Get["LastOpenedFile"] = file.FullName;
+
 				StreamReader tr = file.OpenText();
 				string data = tr.ReadToEnd();
 				tr.Close();
 
 				ParseText(data);
 			}
+			#endregion
+		}
+
+		private void txtFile_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void frmPlotter_ResizeEnd(object sender, EventArgs e)
+		{
+			#region Code
+			if (renderImage == null ||
+				renderImage.Width != pictureBox1.Width ||
+				renderImage.Height != pictureBox1.Height)
+			{
+				renderImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
+				if (pictureBox1.Image != null)
+				{
+					pictureBox1.Image.Dispose();
+				}
+
+				pictureBox1.Image = renderImage;
+			}
+
+			RenderPlots();
 			#endregion
 		}
 	}
