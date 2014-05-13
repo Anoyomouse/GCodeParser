@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,17 +18,12 @@ namespace GCodePlotter
 			InitializeComponent();
 		}
 
-		List<GCodeInstruction> parsedPlots;
-		List<Plot> myPlots;
-		Image renderImage = null;
-		Graphics graphics = null;
-		private void button1_Click(object sender, EventArgs e)
+		private void frmPlotter_Load(object sender, EventArgs e)
 		{
 			#region Code
-			parsedPlots = SimpleGCodeParser.ParseText(textBox1.Text);
-			StringBuilder sb = new StringBuilder();
-
-			if (renderImage == null || renderImage.Width != pictureBox1.Width || renderImage.Height != pictureBox1.Height)
+			if (renderImage == null ||
+				renderImage.Width != pictureBox1.Width ||
+				renderImage.Height != pictureBox1.Height)
 			{
 				renderImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
@@ -38,9 +34,24 @@ namespace GCodePlotter
 
 				pictureBox1.Image = renderImage;
 			}
+			#endregion
+		}
 
-			Graphics g = graphics = Graphics.FromImage(pictureBox1.Image);
-			g.Clear(Color.FromArgb(0x20, 0x20, 0x20));
+		List<GCodeInstruction> parsedPlots;
+		List<Plot> myPlots;
+		Image renderImage = null;
+		private void button1_Click(object sender, EventArgs e)
+		{
+			#region Code
+			ParseText(textBox1.Text);
+			#endregion
+		}
+
+		public void ParseText(string text)
+		{
+			#region Code
+			parsedPlots = SimpleGCodeParser.ParseText(text);
+			StringBuilder sb = new StringBuilder();
 
 			myPlots = new List<Plot>();
 
@@ -134,8 +145,9 @@ namespace GCodePlotter
 			#region Code
 			textBox1.Text = string.Empty;
 
-			graphics.Clear(Color.FromArgb(0x20, 0x20, 0x20));
-			pictureBox1.Image = renderImage;
+			Graphics g = Graphics.FromImage(renderImage);
+			g.Clear(Color.FromArgb(0x20, 0x20, 0x20));
+			pictureBox1.Refresh();
 			#endregion
 		}
 
@@ -170,6 +182,25 @@ namespace GCodePlotter
 			#endregion
 		}
 
+		private void cmdToBottom_Click(object sender, EventArgs e)
+		{
+			#region Code
+			if (lstPlots.SelectedIndex == (lstPlots.Items.Count - 1) || lstPlots.SelectedItem == null)
+			{
+				return;
+			}
+
+			var obj = lstPlots.SelectedItem;
+			var idx = lstPlots.SelectedIndex;
+			lstPlots.Items.Remove(obj);
+			lstPlots.Items.Add(obj);
+			lstPlots.SelectedItem = obj;
+
+			CalculateGCodePlot();
+			RenderPlots();
+			#endregion
+		}
+
 		private void cmdShiftUp_Click(object sender, EventArgs e)
 		{
 			#region Code
@@ -189,6 +220,25 @@ namespace GCodePlotter
 			#endregion
 		}
 
+		private void cmdToTop_Click(object sender, EventArgs e)
+		{
+			#region Code
+			if (lstPlots.SelectedIndex == 0 || lstPlots.SelectedItem == null)
+			{
+				return;
+			}
+
+			var obj = lstPlots.SelectedItem;
+			var idx = lstPlots.SelectedIndex;
+			lstPlots.Items.Remove(obj);
+			lstPlots.Items.Insert(0, obj);
+			lstPlots.SelectedItem = obj;
+
+			CalculateGCodePlot();
+			RenderPlots();
+			#endregion
+		}
+
 		private void lstPlots_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			#region Code
@@ -200,11 +250,13 @@ namespace GCodePlotter
 		private void SelectPlot(ListBox box)
 		{
 			#region Code
+			Graphics g = Graphics.FromImage(renderImage);
+
 			if (lastPlot != null)
 			{
 				foreach (var data in lastPlot.PlotPoints)
 				{
-					data.DrawSegment(graphics, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked);
+					data.DrawSegment(g, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked);
 				}
 			}
 
@@ -215,10 +267,8 @@ namespace GCodePlotter
 
 				foreach (var data in plot.PlotPoints)
 				{
-					data.DrawSegment(graphics, pictureBox1.Height, p: Pens.White, Multiplier: 4, renderG0: checkBox1.Checked);
+					data.DrawSegment(g, pictureBox1.Height, p: Pens.White, Multiplier: 4, renderG0: checkBox1.Checked);
 				}
-
-				pictureBox1.Image = renderImage;
 
 				lastPlot = plot;
 			}
@@ -226,12 +276,15 @@ namespace GCodePlotter
 			{
 				lastPlot = null;
 			}
+
+			pictureBox1.Refresh();
 			#endregion
 		}
 
 		private void RenderPlots()
 		{
-			graphics = Graphics.FromImage(renderImage);
+			#region Code
+			var graphics = Graphics.FromImage(renderImage);
 			graphics.Clear(Color.FromArgb(0x20, 0x20, 0x20));
 			foreach (Plot plotItem in myPlots)
 			{
@@ -248,7 +301,30 @@ namespace GCodePlotter
 				}
 			}
 
-			pictureBox1.Image = renderImage;
+			pictureBox1.Refresh();
+			#endregion
+		}
+
+		private void cmdLoad_Click(object sender, EventArgs e)
+		{
+			#region Code
+			var result = ofdLoadDialog.ShowDialog();
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				var file = new FileInfo(ofdLoadDialog.FileName);
+				if (!file.Exists)
+				{
+					MessageBox.Show("Selected file does not exist, please select an existing file!");
+					return;
+				}
+
+				StreamReader tr = file.OpenText();
+				string data = tr.ReadToEnd();
+				tr.Close();
+
+				ParseText(data);
+			}
+			#endregion
 		}
 	}
 }

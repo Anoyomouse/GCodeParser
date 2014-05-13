@@ -1803,4 +1803,10 @@ G00 X0.0000 Y0.0000
 (Using default footer. To add your own footer create file "footer" in the output dir.)
 (end)</value>
   </data>
+  <metadata name="sfdSaveDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="ofdLoadDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>153, 17</value>
+  </metadata>
 </root>
