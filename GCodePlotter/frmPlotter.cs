@@ -52,7 +52,7 @@ namespace GCodePlotter
 			#endregion
 		}
 
-		List<GCodeInstruction> parsedPlots;
+		//List<GCodeInstruction> parsedPlots;
 		List<Plot> myPlots;
 		Image renderImage = null;
 		private void button1_Click(object sender, EventArgs e)
@@ -70,15 +70,16 @@ namespace GCodePlotter
 		public void ParseText(string text)
 		{
 			#region Code
-			parsedPlots = SimpleGCodeParser.ParseText(text);
+			var parsedPlots = SimpleGCodeParser.ParseText(text);
 			StringBuilder sb = new StringBuilder();
 
-			myPlots = new List<Plot>();
+			lstPlots.Items.Clear();
 
 			PointF currentPoint = new PointF(0, 0);
 			currentPoint.X = 0;
 			currentPoint.Y = 0;
 
+			myPlots = new List<Plot>();
 			Plot currentPlot = new Plot();
 			foreach (var line in parsedPlots)
 			{
@@ -131,10 +132,7 @@ namespace GCodePlotter
 				myPlots.Add(currentPlot);
 			}
 
-			foreach (var plot in myPlots)
-			{
-				lstPlots.Items.Add(plot);
-			}
+			myPlots.ForEach(x => lstPlots.Items.Add(x));
 
 			RenderPlots();
 			#endregion
@@ -187,15 +185,25 @@ namespace GCodePlotter
 				idx = lstPlots.Items.Count - objs.Count;
 			}
 
-			foreach (var i in objs)
+			foreach (Plot i in objs)
+			{
+				myPlots.Remove(i);
 				lstPlots.Items.Remove(i);
+			}
 
 			for(int i = 0; i < objs.Count; i++)
 			{
 				if ((idx + i) >= lstPlots.Items.Count)
+				{
 					lstPlots.Items.Add(objs[i]);
+					myPlots.Add((Plot)objs[i]);
+				}
 				else
+				{
 					lstPlots.Items.Insert(idx + i + 1, objs[i]);
+					myPlots.Insert(idx + i + 1, (Plot)objs[i]);
+				}
+
 				lstPlots.SelectedItems.Add(objs[i]);
 			}
 
@@ -209,12 +217,16 @@ namespace GCodePlotter
 			#region Code
 			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
-			foreach (var i in objs)
+			foreach (Plot i in objs)
+			{
 				lstPlots.Items.Remove(i);
+				myPlots.Remove(i);
+			}
 
 			for (int i = 0; i < objs.Count; i++)
 			{
 				lstPlots.Items.Add(objs[i]);
+				myPlots.Add((Plot)objs[i]);
 				lstPlots.SelectedItems.Add(objs[i]);
 			}
 
@@ -233,12 +245,16 @@ namespace GCodePlotter
 				idx = 1;
 			}
 
-			foreach (var i in objs)
+			foreach (Plot i in objs)
+			{
 				lstPlots.Items.Remove(i);
+				myPlots.Remove(i);
+			}
 
 			for (int i = 0; i < objs.Count; i++)
 			{
 				lstPlots.Items.Insert(idx + i - 1, objs[i]);
+				myPlots.Insert(idx + i - 1, (Plot)objs[i]);
 				lstPlots.SelectedItems.Add(objs[i]);
 			}
 
@@ -252,12 +268,16 @@ namespace GCodePlotter
 			#region Code
 			var objs = lstPlots.SelectedItems.Cast<object>().ToList();
 			var idx = lstPlots.SelectedIndex;
-			foreach (var i in objs)
+			foreach (Plot i in objs)
+			{
 				lstPlots.Items.Remove(i);
+				myPlots.Remove(i);
+			}
 
 			for (int i = 0; i < objs.Count; i++)
 			{
 				lstPlots.Items.Insert(i, objs[i]);
+				myPlots.Insert(i, (Plot)objs[i]);
 				lstPlots.SelectedItems.Add(objs[i]);
 			}
 
@@ -277,33 +297,6 @@ namespace GCodePlotter
 		private void SelectPlot(ListBox box)
 		{
 			#region Code
-			/*//Graphics g = Graphics.FromImage(renderImage);
-
-			if (lastPlot != null)
-			{
-				// foreach (var data in lastPlot.PlotPoints)
-				//{
-				//	data.DrawSegment(g, pictureBox1.Height, Multiplier: 4, renderG0: checkBox1.Checked);
-				//}
-			}
-
-			var obj = box.SelectedItem;
-			if (obj != null && obj is Plot)
-			{
-				Plot plot = obj as Plot;
-
-				//foreach (var data in plot.PlotPoints)
-				//{
-				//	data.DrawSegment(g, pictureBox1.Height, highlight: true, Multiplier: 4, renderG0: checkBox1.Checked);
-				//}
-
-				lastPlot = plot;
-			}
-			else
-			{
-				lastPlot = null;
-			}*/
-
 			RenderPlots();
 
 			pictureBox1.Refresh();
@@ -317,10 +310,10 @@ namespace GCodePlotter
 			graphics.Clear(ColorHelper.GetColor(PenColorList.Background));
 
 			var multiplier = 4f;
-			if (radZoomOne.Checked) multiplier = 1;
-			else if (radZoomTwo.Checked) multiplier = 2;
+			if (radZoomTwo.Checked) multiplier = 2;
 			else if (radZoomFour.Checked) multiplier = 4;
 			else if (radZoomEight.Checked) multiplier = 8;
+			else if (radZoomSixteen.Checked) multiplier = 16;
 
 			var scale = (10 * multiplier);
 
@@ -415,7 +408,49 @@ namespace GCodePlotter
 		{
 			SettingsForm frm = new SettingsForm();
 			frm.FormClosed += (s, evt) => this.RenderPlots();
-			frm.Show();
+			frm.StartPosition = FormStartPosition.CenterParent;
+			frm.ValueChanged += (s, evt) => this.RenderPlots();
+			frm.Show(this);
+		}
+
+		private void cmdRenameSelection_Click(object sender, EventArgs e)
+		{
+			#region Code
+			if (lstPlots.SelectedItems.Count == 0)
+			{
+				return;
+			}
+
+			frmRenamePlots frm = new frmRenamePlots();
+			frm.StartPosition = FormStartPosition.CenterParent;
+
+			List<Plot> items = new List<Plot>(lstPlots.SelectedItems.Cast<Plot>());
+			foreach (var p in items)
+			{
+				frm.AddPlot(p.ToString());
+			}
+
+			var res = frm.ShowDialog(this);
+			if (res == System.Windows.Forms.DialogResult.OK)
+			{
+				int counter = 1;
+				foreach (var p in items)
+				{
+					var idx = lstPlots.Items.IndexOf(p);
+					var plot = myPlots[idx];
+
+					plot.Name = string.Format("{0}{1}", frm.NewPlotName, counter);
+
+					lstPlots.Items.Remove(plot);
+					lstPlots.Items.Insert(idx, plot);
+					lstPlots.SelectedItems.Add(plot);
+
+					counter++;
+				}
+
+				lstPlots.Refresh();
+			}
+			#endregion
 		}
 	}
 }

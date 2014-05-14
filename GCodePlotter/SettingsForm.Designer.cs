@@ -29,22 +29,22 @@
 		private void InitializeComponent()
 		{
 			this.label1 = new System.Windows.Forms.Label();
-			this.cpRapidMove = new ControlSuite.ColorPickerBox();
-			this.cpNormalMove = new ControlSuite.ColorPickerBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.cpCWArc = new ControlSuite.ColorPickerBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.cpCCWArc = new ControlSuite.ColorPickerBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.cpRapidMoveHighlight = new ControlSuite.ColorPickerBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.cpLineHighlight = new ControlSuite.ColorPickerBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this.cpBackground = new ControlSuite.ColorPickerBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.cpGridLines = new ControlSuite.ColorPickerBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.cmdClose = new System.Windows.Forms.Button();
+			this.cpGridLines = new ControlSuite.ColorPickerBox();
+			this.cpBackground = new ControlSuite.ColorPickerBox();
+			this.cpLineHighlight = new ControlSuite.ColorPickerBox();
+			this.cpRapidMoveHighlight = new ControlSuite.ColorPickerBox();
+			this.cpCCWArc = new ControlSuite.ColorPickerBox();
+			this.cpCWArc = new ControlSuite.ColorPickerBox();
+			this.cpNormalMove = new ControlSuite.ColorPickerBox();
+			this.cpRapidMove = new ControlSuite.ColorPickerBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -56,22 +56,6 @@
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Rapid Move";
 			// 
-			// cpRapidMove
-			// 
-			this.cpRapidMove.Location = new System.Drawing.Point(126, 9);
-			this.cpRapidMove.Name = "cpRapidMove";
-			this.cpRapidMove.SelectedColor = System.Drawing.Color.Red;
-			this.cpRapidMove.Size = new System.Drawing.Size(98, 20);
-			this.cpRapidMove.TabIndex = 1;
-			// 
-			// cpNormalMove
-			// 
-			this.cpNormalMove.Location = new System.Drawing.Point(126, 35);
-			this.cpNormalMove.Name = "cpNormalMove";
-			this.cpNormalMove.SelectedColor = System.Drawing.Color.DodgerBlue;
-			this.cpNormalMove.Size = new System.Drawing.Size(98, 20);
-			this.cpNormalMove.TabIndex = 3;
-			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
@@ -80,14 +64,6 @@
 			this.label2.Size = new System.Drawing.Size(70, 13);
 			this.label2.TabIndex = 2;
 			this.label2.Text = "Normal Move";
-			// 
-			// cpCWArc
-			// 
-			this.cpCWArc.Location = new System.Drawing.Point(126, 61);
-			this.cpCWArc.Name = "cpCWArc";
-			this.cpCWArc.SelectedColor = System.Drawing.Color.Lime;
-			this.cpCWArc.Size = new System.Drawing.Size(98, 20);
-			this.cpCWArc.TabIndex = 5;
 			// 
 			// label3
 			// 
@@ -98,14 +74,6 @@
 			this.label3.TabIndex = 4;
 			this.label3.Text = "CW Arc";
 			// 
-			// cpCCWArc
-			// 
-			this.cpCCWArc.Location = new System.Drawing.Point(126, 87);
-			this.cpCCWArc.Name = "cpCCWArc";
-			this.cpCCWArc.SelectedColor = System.Drawing.Color.Yellow;
-			this.cpCCWArc.Size = new System.Drawing.Size(98, 20);
-			this.cpCCWArc.TabIndex = 7;
-			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
@@ -114,14 +82,6 @@
 			this.label4.Size = new System.Drawing.Size(51, 13);
 			this.label4.TabIndex = 6;
 			this.label4.Text = "CCW Arc";
-			// 
-			// cpRapidMoveHighlight
-			// 
-			this.cpRapidMoveHighlight.Location = new System.Drawing.Point(126, 113);
-			this.cpRapidMoveHighlight.Name = "cpRapidMoveHighlight";
-			this.cpRapidMoveHighlight.SelectedColor = System.Drawing.Color.Salmon;
-			this.cpRapidMoveHighlight.Size = new System.Drawing.Size(98, 20);
-			this.cpRapidMoveHighlight.TabIndex = 9;
 			// 
 			// label5
 			// 
@@ -132,14 +92,6 @@
 			this.label5.TabIndex = 8;
 			this.label5.Text = "Rapid Move Highlight";
 			// 
-			// cpLineHighlight
-			// 
-			this.cpLineHighlight.Location = new System.Drawing.Point(126, 139);
-			this.cpLineHighlight.Name = "cpLineHighlight";
-			this.cpLineHighlight.SelectedColor = System.Drawing.Color.White;
-			this.cpLineHighlight.Size = new System.Drawing.Size(98, 20);
-			this.cpLineHighlight.TabIndex = 11;
-			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
@@ -149,14 +101,6 @@
 			this.label6.TabIndex = 10;
 			this.label6.Text = "Line Highlight";
 			// 
-			// cpBackground
-			// 
-			this.cpBackground.Location = new System.Drawing.Point(126, 165);
-			this.cpBackground.Name = "cpBackground";
-			this.cpBackground.SelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-			this.cpBackground.Size = new System.Drawing.Size(98, 20);
-			this.cpBackground.TabIndex = 13;
-			// 
 			// label7
 			// 
 			this.label7.AutoSize = true;
@@ -165,14 +109,6 @@
 			this.label7.Size = new System.Drawing.Size(65, 13);
 			this.label7.TabIndex = 12;
 			this.label7.Text = "Background";
-			// 
-			// cpGridLines
-			// 
-			this.cpGridLines.Location = new System.Drawing.Point(126, 191);
-			this.cpGridLines.Name = "cpGridLines";
-			this.cpGridLines.SelectedColor = System.Drawing.Color.DimGray;
-			this.cpGridLines.Size = new System.Drawing.Size(98, 20);
-			this.cpGridLines.TabIndex = 15;
 			// 
 			// label8
 			// 
@@ -192,6 +128,86 @@
 			this.cmdClose.Text = "Close";
 			this.cmdClose.UseVisualStyleBackColor = true;
 			this.cmdClose.Click += new System.EventHandler(this.cmdClose_Click);
+			// 
+			// cpGridLines
+			// 
+			this.cpGridLines.Location = new System.Drawing.Point(126, 191);
+			this.cpGridLines.Name = "cpGridLines";
+			this.cpGridLines.SelectedColor = System.Drawing.Color.DimGray;
+			this.cpGridLines.Size = new System.Drawing.Size(98, 20);
+			this.cpGridLines.TabIndex = 15;
+			this.cpGridLines.Value = System.Drawing.Color.DimGray;
+			this.cpGridLines.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpBackground
+			// 
+			this.cpBackground.Location = new System.Drawing.Point(126, 165);
+			this.cpBackground.Name = "cpBackground";
+			this.cpBackground.SelectedColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.cpBackground.Size = new System.Drawing.Size(98, 20);
+			this.cpBackground.TabIndex = 13;
+			this.cpBackground.Value = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+			this.cpBackground.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpLineHighlight
+			// 
+			this.cpLineHighlight.Location = new System.Drawing.Point(126, 139);
+			this.cpLineHighlight.Name = "cpLineHighlight";
+			this.cpLineHighlight.SelectedColor = System.Drawing.Color.White;
+			this.cpLineHighlight.Size = new System.Drawing.Size(98, 20);
+			this.cpLineHighlight.TabIndex = 11;
+			this.cpLineHighlight.Value = System.Drawing.Color.White;
+			this.cpLineHighlight.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpRapidMoveHighlight
+			// 
+			this.cpRapidMoveHighlight.Location = new System.Drawing.Point(126, 113);
+			this.cpRapidMoveHighlight.Name = "cpRapidMoveHighlight";
+			this.cpRapidMoveHighlight.SelectedColor = System.Drawing.Color.Salmon;
+			this.cpRapidMoveHighlight.Size = new System.Drawing.Size(98, 20);
+			this.cpRapidMoveHighlight.TabIndex = 9;
+			this.cpRapidMoveHighlight.Value = System.Drawing.Color.Salmon;
+			this.cpRapidMoveHighlight.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpCCWArc
+			// 
+			this.cpCCWArc.Location = new System.Drawing.Point(126, 87);
+			this.cpCCWArc.Name = "cpCCWArc";
+			this.cpCCWArc.SelectedColor = System.Drawing.Color.Yellow;
+			this.cpCCWArc.Size = new System.Drawing.Size(98, 20);
+			this.cpCCWArc.TabIndex = 7;
+			this.cpCCWArc.Value = System.Drawing.Color.Yellow;
+			this.cpCCWArc.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpCWArc
+			// 
+			this.cpCWArc.Location = new System.Drawing.Point(126, 61);
+			this.cpCWArc.Name = "cpCWArc";
+			this.cpCWArc.SelectedColor = System.Drawing.Color.Lime;
+			this.cpCWArc.Size = new System.Drawing.Size(98, 20);
+			this.cpCWArc.TabIndex = 5;
+			this.cpCWArc.Value = System.Drawing.Color.Lime;
+			this.cpCWArc.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpNormalMove
+			// 
+			this.cpNormalMove.Location = new System.Drawing.Point(126, 35);
+			this.cpNormalMove.Name = "cpNormalMove";
+			this.cpNormalMove.SelectedColor = System.Drawing.Color.DodgerBlue;
+			this.cpNormalMove.Size = new System.Drawing.Size(98, 20);
+			this.cpNormalMove.TabIndex = 3;
+			this.cpNormalMove.Value = System.Drawing.Color.DodgerBlue;
+			this.cpNormalMove.ValueChanged += new System.EventHandler(this.ColorChanged);
+			// 
+			// cpRapidMove
+			// 
+			this.cpRapidMove.Location = new System.Drawing.Point(126, 9);
+			this.cpRapidMove.Name = "cpRapidMove";
+			this.cpRapidMove.SelectedColor = System.Drawing.Color.Red;
+			this.cpRapidMove.Size = new System.Drawing.Size(98, 20);
+			this.cpRapidMove.TabIndex = 1;
+			this.cpRapidMove.Value = System.Drawing.Color.Red;
+			this.cpRapidMove.ValueChanged += new System.EventHandler(this.ColorChanged);
 			// 
 			// SettingsForm
 			// 

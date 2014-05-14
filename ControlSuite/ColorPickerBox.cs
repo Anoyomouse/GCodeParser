@@ -48,6 +48,14 @@ namespace ControlSuite
 			#endregion
 		}
 
+		public Color Value
+		{
+			get { return this.SelectedColor; }
+			set { this.SelectedColor = value; }
+		}
+
+		public event EventHandler ValueChanged;
+
 		public Color SelectedColor
 		{
 			get
@@ -58,6 +66,10 @@ namespace ControlSuite
 			{
 				_my_color = value;
 				txtHex.BackColor = value;
+				if (this.ValueChanged != null)
+				{
+					this.ValueChanged(this, EventArgs.Empty);
+				}
 			}
 		}
 

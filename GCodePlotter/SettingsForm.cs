@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ControlSuite;
 
 namespace GCodePlotter
 {
@@ -43,6 +44,29 @@ namespace GCodePlotter
 		private void cmdClose_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		public event EventHandler ValueChanged;
+
+		private void ColorChanged(object sender, EventArgs e)
+		{
+			ColorPickerBox cpBox = sender as ColorPickerBox;
+
+			if (cpBox == null) return;
+
+			if (cpBox == cpRapidMove) { ColorHelper.SetColor(PenColorList.RapidMove, cpRapidMove.SelectedColor); }
+			if (cpBox == cpNormalMove) { ColorHelper.SetColor(PenColorList.NormalMove, cpNormalMove.SelectedColor); }
+			if (cpBox == cpCWArc) { ColorHelper.SetColor(PenColorList.CWArc, cpCWArc.SelectedColor); }
+			if (cpBox == cpCCWArc) { ColorHelper.SetColor(PenColorList.CCWArc, cpCCWArc.SelectedColor); }
+			if (cpBox == cpRapidMoveHighlight) { ColorHelper.SetColor(PenColorList.RapidMoveHilight, cpRapidMoveHighlight.SelectedColor); }
+			if (cpBox == cpLineHighlight) { ColorHelper.SetColor(PenColorList.LineHighlight, cpLineHighlight.SelectedColor); }
+			if (cpBox == cpBackground) { ColorHelper.SetColor(PenColorList.Background, cpBackground.SelectedColor); }
+			if (cpBox == cpGridLines) { ColorHelper.SetColor(PenColorList.GridLines, cpGridLines.SelectedColor); }
+
+			if (ValueChanged != null)
+			{
+				ValueChanged(this, EventArgs.Empty);
+			}
 		}
 	}
 }
