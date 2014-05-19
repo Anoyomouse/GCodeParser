@@ -86,18 +86,25 @@ namespace GCodePlotter
 				sb.Append(line).AppendLine();
 				if (line.IsOnlyComment)
 				{
-					if (line.Comment.StartsWith("Start cutting path id:"))
+					if (line.Comment.StartsWith("Start cutting path id:") || line.Comment == "Footer")
 					{
 						if (currentPlot.PlotPoints.Count > 0)
 						{
 							var point = currentPlot.PlotPoints[currentPlot.PlotPoints.Count - 1];
-							currentPlot.endPoint = new PointF(point.X2, point.Y2);
+							//currentPlot.endPoint = new PointF(point.X2, point.Y2);
 							myPlots.Add(currentPlot);
 							// New plot!
 							currentPlot = new Plot();
-							currentPlot.startSet = false;
 						}
-						currentPlot.Name = line.Comment.Substring(23);
+
+						if (line.Comment == "Footer")
+						{
+							currentPlot.Name = line.Comment;
+						}
+						else
+						{
+							currentPlot.Name = line.Comment.Substring(23);
+						}
 					}
 
 					if (line.Comment.StartsWith("End cutting path id:"))
@@ -105,7 +112,6 @@ namespace GCodePlotter
 						if (currentPlot.PlotPoints.Count > 0)
 						{
 							var point = currentPlot.PlotPoints[currentPlot.PlotPoints.Count - 1];
-							currentPlot.endPoint = new PointF(point.X2, point.Y2);
 							myPlots.Add(currentPlot);
 							// New plot!
 							currentPlot = new Plot();
@@ -116,23 +122,22 @@ namespace GCodePlotter
 				{
 					currentPlot.PlotPoints.AddRange(line.RenderCode(ref currentPoint));
 					currentPlot.GCodeInstructions.Add(line);
-
-					if (line.CommandEnum == CommandList.RapidMove && (line.X != null || line.Y != null))
-					{
-						var point = currentPlot.PlotPoints[0];
-						currentPlot.startPoint = new PointF(point.X2, point.Y2);
-					}
 				}
 			}
 
 			if (currentPlot.PlotPoints.Count > 0)
 			{
 				var point = currentPlot.PlotPoints[currentPlot.PlotPoints.Count - 1];
-				currentPlot.endPoint = new PointF(point.X2, point.Y2);
 				myPlots.Add(currentPlot);
 			}
 
-			myPlots.ForEach(x => lstPlots.Items.Add(x));
+			var footer = myPlots.Last();
+			if (footer.Name == "Footer")
+			{
+				myPlots.Remove(footer);
+			}
+
+			myPlots.ForEach(x => { x.FinalizePlot(); lstPlots.Items.Add(x); });
 
 			RenderPlots();
 			#endregion
@@ -147,11 +152,7 @@ namespace GCodePlotter
 
 			foreach (var plot in lstPlots.Items.Cast<Plot>())
 			{
-				plot.PlotPoints.Clear();
-				foreach (var line in plot.GCodeInstructions)
-				{
-					plot.PlotPoints.AddRange(line.RenderCode(ref currentPoint));
-				}
+				plot.Replot(ref currentPoint);
 			}
 			#endregion
 		}

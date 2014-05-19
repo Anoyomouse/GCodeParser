@@ -240,6 +240,17 @@ namespace GCodePlotter
 		public float? I { get; set; }
 		public float? J { get; set; }
 
+		public PointF StartPoint;
+		public PointF EndPoint;
+		internal float minX, minY, maxX, maxY;
+		public RectangleF GetBounds
+		{
+			get
+			{
+				return new RectangleF(minX, minY, maxX - minX, maxY - minY);
+			}
+		}
+
 		public string CommandType
 		{
 			get
@@ -358,11 +369,22 @@ namespace GCodePlotter
 				//	pos.Z += (int)(Z.Value * Multiplier);
 			}
 
+			if (CommandEnum != CommandList.RapidMove)
+			{
+				StartPoint = new PointF(currentPoint.X, currentPoint.Y);
+			}
+			else
+			{
+				StartPoint = new PointF(pos.X, pos.Y); // rapid move, starts once we've moved!
+			}
+
 			if (CommandEnum == CommandList.RapidMove || CommandEnum == CommandList.NormalMove)
 			{
 				var line = new LinePoints(currentPoint, pos, CommandEnum == CommandList.RapidMove ? PenColorList.RapidMove : PenColorList.NormalMove);
 				currentPoint.X = pos.X;
 				currentPoint.Y = pos.Y;
+
+				EndPoint = new PointF(pos.X, pos.Y);
 				return new List<LinePoints>() { line };
 			}
 
@@ -373,7 +395,10 @@ namespace GCodePlotter
 				center.X = current.X + this.I ?? 0;
 				center.Y = current.Y + this.J ?? 0;
 
-				return RenderArc(center, pos, (CommandEnum == CommandList.CWArc), ref currentPoint);
+				var arcPoints = RenderArc(center, pos, (CommandEnum == CommandList.CWArc), ref currentPoint);
+
+				EndPoint = new PointF(currentPoint.X, currentPoint.Y);
+				return arcPoints;
 			}
 
 			return null;
@@ -436,6 +461,10 @@ namespace GCodePlotter
 			// or the length of the curve divided by the curve section constant
 			steps = (int)Math.Ceiling(Math.Max(angle * 2.4, length / CurveSection));
 
+			// Bounds set to start point
+			minX = maxX = current.X;
+			minY = maxY = current.Y;
+
 			// this is the real draw action.
 			PointF newPoint = new PointF(current.X, current.Y);
 			PointF lastPoint = new PointF(current.X, current.Y);
@@ -453,6 +482,9 @@ namespace GCodePlotter
 				newPoint.X = (float)((center.X + radius * Math.Cos(angleA + angle * ((double)step / steps))));
 				newPoint.Y = (float)((center.Y + radius * Math.Sin(angleA + angle * ((double)step / steps))));
 				//newPoint.setZ(arcStartZ + (endpoint.z() - arcStartZ) * s / steps);
+				
+				minX = Math.Min(minX, newPoint.X); maxX = Math.Max(maxX, newPoint.X);
+				minY = Math.Min(minY, newPoint.Y); maxY = Math.Max(maxY, newPoint.Y);
 
 				output.Add(new LinePoints(currentPosition, newPoint, p));
 				// start the move
@@ -530,20 +562,52 @@ namespace GCodePlotter
 		private List<GCodeInstruction> gcodeInstructions = new List<GCodeInstruction>();
 		public List<GCodeInstruction> GCodeInstructions { get { return gcodeInstructions; } }
 
-		public PointF startPoint { get; set; }
-		public PointF endPoint { get; set; }
+		public void FinalizePlot()
+		{
+			var first = gcodeInstructions.First();
+			if (first != null)
+			{
+				/*StartPoint = first.StartPoint;
+				EndPoint = first.EndPoint;*/
 
-		public bool startSet { get; set; }
+				minX = first.minX; maxX = first.maxX;
+				minY = first.minY; maxY = first.maxY;
+			}
+
+			foreach (var plot in gcodeInstructions)
+			{
+				minX = Math.Min(minX, plot.minX); maxX = Math.Max(maxX, plot.maxX);
+				minY = Math.Min(minY, plot.minY); maxY = Math.Max(maxY, plot.maxY);
+
+				//EndPoint = plot.EndPoint;
+			}
+		}
+
+		/*public PointF StartPoint { get; set; }
+		public PointF EndPoint { get; set; }*/
+
+		public float minX, minY, maxX, maxY;
 
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat("Plot: {0} with {1} lines", Name, PlotPoints != null ? PlotPoints.Count : 0);
-			if (startPoint == endPoint)
+			sb.AppendFormat("{0}   --   {1} lines -- {2},{3}-{4},{5}", Name, PlotPoints != null ? PlotPoints.Count : 0, minX, minY, maxX, maxY);
+			/*if (StartPoint == EndPoint)
 			{
 				sb.Append(" loop");
-			}
+			}*/
 			return sb.ToString();
+		}
+
+		public void Replot(ref PointF currentPoint)
+		{
+			this.PlotPoints.Clear();
+			foreach (var line in this.GCodeInstructions)
+			{
+				this.PlotPoints.AddRange(line.RenderCode(ref currentPoint));
+			}
+
+			this.FinalizePlot();
 		}
 
 		public string BuildGCodeOutput(bool multilayer)
