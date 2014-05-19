@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmGCodePreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmGCodePreview.Designer.cs">
+      <DependentUpon>frmGCodePreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPlotter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +72,9 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SimpleGCodeParser.cs" />
+    <EmbeddedResource Include="frmGCodePreview.resx">
+      <DependentUpon>frmGCodePreview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmPlotter.resx">
       <DependentUpon>frmPlotter.cs</DependentUpon>
     </EmbeddedResource>

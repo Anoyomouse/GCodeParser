@@ -545,6 +545,20 @@ namespace GCodePlotter
 			}
 			return sb.ToString();
 		}
+
+		public string BuildGCodeOutput(bool multilayer)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.AppendFormat("(Start cutting path id: {0})", this.Name).AppendLine();
+			foreach (var line in this.GCodeInstructions)
+			{
+				sb.AppendLine(line.ToString());
+			}
+			sb.AppendFormat("(End cutting path id: {0})", this.Name).AppendLine();
+
+			return sb.ToString();
+		}
 	}
 
 	public class ParsingException : Exception

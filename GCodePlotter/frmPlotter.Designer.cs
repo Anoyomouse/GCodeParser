@@ -47,13 +47,14 @@
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.txtFile = new System.Windows.Forms.TextBox();
+			this.cmdShowGCode = new System.Windows.Forms.Button();
+			this.cmdRenameSelection = new System.Windows.Forms.Button();
 			this.cmdSettings = new System.Windows.Forms.Button();
 			this.panel5 = new System.Windows.Forms.Panel();
+			this.radZoomSixteen = new System.Windows.Forms.RadioButton();
 			this.radZoomEight = new System.Windows.Forms.RadioButton();
 			this.radZoomFour = new System.Windows.Forms.RadioButton();
 			this.radZoomTwo = new System.Windows.Forms.RadioButton();
-			this.radZoomSixteen = new System.Windows.Forms.RadioButton();
-			this.cmdRenameSelection = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
 			this.panel3.SuspendLayout();
@@ -175,6 +176,7 @@
 			this.cmdSave.TabIndex = 9;
 			this.cmdSave.Text = "Save Data";
 			this.cmdSave.UseVisualStyleBackColor = true;
+			this.cmdSave.Click += new System.EventHandler(this.cmdSave_Click);
 			// 
 			// button3
 			// 
@@ -233,6 +235,7 @@
 			this.panel4.Controls.Add(this.button3);
 			this.panel4.Controls.Add(this.cmdSave);
 			this.panel4.Controls.Add(this.cmdLoad);
+			this.panel4.Controls.Add(this.cmdShowGCode);
 			this.panel4.Controls.Add(this.cmdRenameSelection);
 			this.panel4.Controls.Add(this.cmdSettings);
 			this.panel4.Controls.Add(this.button2);
@@ -251,6 +254,26 @@
 			this.txtFile.Size = new System.Drawing.Size(103, 20);
 			this.txtFile.TabIndex = 10;
 			this.txtFile.TextChanged += new System.EventHandler(this.txtFile_TextChanged);
+			// 
+			// cmdShowGCode
+			// 
+			this.cmdShowGCode.Location = new System.Drawing.Point(10, 373);
+			this.cmdShowGCode.Name = "cmdShowGCode";
+			this.cmdShowGCode.Size = new System.Drawing.Size(85, 42);
+			this.cmdShowGCode.TabIndex = 2;
+			this.cmdShowGCode.Text = "Preview GCode";
+			this.cmdShowGCode.UseVisualStyleBackColor = true;
+			this.cmdShowGCode.Click += new System.EventHandler(this.cmdShowGCode_Click);
+			// 
+			// cmdRenameSelection
+			// 
+			this.cmdRenameSelection.Location = new System.Drawing.Point(10, 288);
+			this.cmdRenameSelection.Name = "cmdRenameSelection";
+			this.cmdRenameSelection.Size = new System.Drawing.Size(85, 42);
+			this.cmdRenameSelection.TabIndex = 2;
+			this.cmdRenameSelection.Text = "Rename Selection";
+			this.cmdRenameSelection.UseVisualStyleBackColor = true;
+			this.cmdRenameSelection.Click += new System.EventHandler(this.cmdRenameSelection_Click);
 			// 
 			// cmdSettings
 			// 
@@ -274,6 +297,17 @@
 			this.panel5.Name = "panel5";
 			this.panel5.Size = new System.Drawing.Size(647, 38);
 			this.panel5.TabIndex = 12;
+			// 
+			// radZoomSixteen
+			// 
+			this.radZoomSixteen.AutoSize = true;
+			this.radZoomSixteen.Location = new System.Drawing.Point(149, 12);
+			this.radZoomSixteen.Name = "radZoomSixteen";
+			this.radZoomSixteen.Size = new System.Drawing.Size(36, 17);
+			this.radZoomSixteen.TabIndex = 0;
+			this.radZoomSixteen.Text = "x4";
+			this.radZoomSixteen.UseVisualStyleBackColor = true;
+			this.radZoomSixteen.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
 			// radZoomEight
 			// 
@@ -310,27 +344,6 @@
 			this.radZoomTwo.UseVisualStyleBackColor = true;
 			this.radZoomTwo.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
-			// radZoomSixteen
-			// 
-			this.radZoomSixteen.AutoSize = true;
-			this.radZoomSixteen.Location = new System.Drawing.Point(149, 12);
-			this.radZoomSixteen.Name = "radZoomSixteen";
-			this.radZoomSixteen.Size = new System.Drawing.Size(36, 17);
-			this.radZoomSixteen.TabIndex = 0;
-			this.radZoomSixteen.Text = "x4";
-			this.radZoomSixteen.UseVisualStyleBackColor = true;
-			this.radZoomSixteen.CheckedChanged += new System.EventHandler(this.radScaleChange);
-			// 
-			// cmdRenameSelection
-			// 
-			this.cmdRenameSelection.Location = new System.Drawing.Point(10, 288);
-			this.cmdRenameSelection.Name = "cmdRenameSelection";
-			this.cmdRenameSelection.Size = new System.Drawing.Size(85, 42);
-			this.cmdRenameSelection.TabIndex = 2;
-			this.cmdRenameSelection.Text = "Rename Selection";
-			this.cmdRenameSelection.UseVisualStyleBackColor = true;
-			this.cmdRenameSelection.Click += new System.EventHandler(this.cmdRenameSelection_Click);
-			// 
 			// frmPlotter
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -342,9 +355,10 @@
 			this.Controls.Add(this.panel1);
 			this.Name = "frmPlotter";
 			this.Padding = new System.Windows.Forms.Padding(5);
-			this.Text = "Form1";
+			this.Text = "JaMakinMeGCode";
 			this.Load += new System.EventHandler(this.frmPlotter_Load);
 			this.ResizeEnd += new System.EventHandler(this.frmPlotter_ResizeEnd);
+			this.ClientSizeChanged += new System.EventHandler(this.frmPlotter_ResizeEnd);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.panel1.ResumeLayout(false);
 			this.panel3.ResumeLayout(false);
@@ -386,6 +400,7 @@
 		private System.Windows.Forms.Button cmdSettings;
 		private System.Windows.Forms.RadioButton radZoomSixteen;
 		private System.Windows.Forms.Button cmdRenameSelection;
+		private System.Windows.Forms.Button cmdShowGCode;
     }
 }
 

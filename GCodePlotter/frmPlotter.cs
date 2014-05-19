@@ -452,5 +452,43 @@ namespace GCodePlotter
 			}
 			#endregion
 		}
+
+		private void cmdShowGCode_Click(object sender, EventArgs e)
+		{
+			frmGCodePreview frmPreview = new frmGCodePreview();
+
+			frmPreview.GCodeText = (lstPlots.SelectedItem as Plot).BuildGCodeOutput(false);
+			frmPreview.Show();
+		}
+
+		private void cmdSave_Click(object sender, EventArgs e)
+		{
+			#region Code
+			var result = sfdSaveDialog.ShowDialog();
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				var file = new FileInfo(sfdSaveDialog.FileName);
+				QuickSettings.Get["LastOpenedFile"] = file.FullName;
+
+				var tw = new StreamWriter(file.OpenWrite());
+
+				tw.WriteLine("(File built with Jamakinmegcode)");
+				tw.WriteLine("(Generated on " + DateTime.Now.ToString() + ")");
+				tw.WriteLine();
+				tw.WriteLine("(Header)");
+				tw.WriteLine("G90");
+				tw.WriteLine("G21 (All units in mm)");
+				tw.WriteLine("(Header end.)");
+				tw.WriteLine();
+				myPlots.ForEach(x => {
+					tw.WriteLine();
+					tw.Write(x.BuildGCodeOutput(false));
+				});
+				tw.Flush();
+				
+				tw.Close();
+			}
+			#endregion
+		}
 	}
 }
