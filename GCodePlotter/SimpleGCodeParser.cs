@@ -104,7 +104,7 @@ namespace GCodePlotter
 							_colorList[type] = Color.FromName(value);
 						}
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 						_colorList[type] = GetDefaultColor(type);
 					}
@@ -240,16 +240,7 @@ namespace GCodePlotter
 		public float? I { get; set; }
 		public float? J { get; set; }
 
-		public PointF StartPoint;
-		public PointF EndPoint;
-		internal float minX, minY, maxX, maxY;
-		public RectangleF GetBounds
-		{
-			get
-			{
-				return new RectangleF(minX, minY, maxX - minX, maxY - minY);
-			}
-		}
+		internal float maxX, maxY;
 
 		public string CommandType
 		{
@@ -300,6 +291,11 @@ namespace GCodePlotter
 
 		public override string ToString()
 		{
+			return this.ToString(false);
+		}
+
+		public string ToString(bool multiLayer, float? zoverride = null)
+		{
 			#region Code
 			if (string.IsNullOrWhiteSpace(Command))
 			{
@@ -311,7 +307,19 @@ namespace GCodePlotter
 
 			if (X.HasValue) sb.AppendFormat(" X {0:F4}", this.X);
 			if (Y.HasValue) sb.AppendFormat(" Y {0:F4}", this.Y);
-			if (Z.HasValue) sb.AppendFormat(" Z {0:F4}", this.Z);
+
+			if (Z.HasValue)
+			{
+				if (this.Z <= 0)
+				{
+					if (multiLayer && zoverride.HasValue)
+						sb.AppendFormat(" Z {0:F4}", zoverride.Value);
+					else
+						sb.AppendFormat(" Z {0:F4}", this.Z);
+				}
+				else
+					sb.AppendFormat(" Z {0:F4}", this.Z);
+			}
 			if (I.HasValue) sb.AppendFormat(" I {0:F4}", this.I);
 			if (J.HasValue) sb.AppendFormat(" J {0:F4}", this.J);
 			if (F.HasValue) sb.AppendFormat(" F {0:F4}", this.F);
@@ -369,22 +377,14 @@ namespace GCodePlotter
 				//	pos.Z += (int)(Z.Value * Multiplier);
 			}
 
-			if (CommandEnum != CommandList.RapidMove)
-			{
-				StartPoint = new PointF(currentPoint.X, currentPoint.Y);
-			}
-			else
-			{
-				StartPoint = new PointF(pos.X, pos.Y); // rapid move, starts once we've moved!
-			}
-
 			if (CommandEnum == CommandList.RapidMove || CommandEnum == CommandList.NormalMove)
 			{
+				maxX = Math.Max(currentPoint.X, pos.X);
+				maxY = Math.Max(currentPoint.Y, pos.Y);
+
 				var line = new LinePoints(currentPoint, pos, CommandEnum == CommandList.RapidMove ? PenColorList.RapidMove : PenColorList.NormalMove);
 				currentPoint.X = pos.X;
 				currentPoint.Y = pos.Y;
-
-				EndPoint = new PointF(pos.X, pos.Y);
 				return new List<LinePoints>() { line };
 			}
 
@@ -396,8 +396,6 @@ namespace GCodePlotter
 				center.Y = current.Y + this.J ?? 0;
 
 				var arcPoints = RenderArc(center, pos, (CommandEnum == CommandList.CWArc), ref currentPoint);
-
-				EndPoint = new PointF(currentPoint.X, currentPoint.Y);
 				return arcPoints;
 			}
 
@@ -461,10 +459,6 @@ namespace GCodePlotter
 			// or the length of the curve divided by the curve section constant
 			steps = (int)Math.Ceiling(Math.Max(angle * 2.4, length / CurveSection));
 
-			// Bounds set to start point
-			minX = maxX = current.X;
-			minY = maxY = current.Y;
-
 			// this is the real draw action.
 			PointF newPoint = new PointF(current.X, current.Y);
 			PointF lastPoint = new PointF(current.X, current.Y);
@@ -483,8 +477,8 @@ namespace GCodePlotter
 				newPoint.Y = (float)((center.Y + radius * Math.Sin(angleA + angle * ((double)step / steps))));
 				//newPoint.setZ(arcStartZ + (endpoint.z() - arcStartZ) * s / steps);
 				
-				minX = Math.Min(minX, newPoint.X); maxX = Math.Max(maxX, newPoint.X);
-				minY = Math.Min(minY, newPoint.Y); maxY = Math.Max(maxY, newPoint.Y);
+				maxX = Math.Max(maxX, newPoint.X);
+				maxY = Math.Max(maxY, newPoint.Y);
 
 				output.Add(new LinePoints(currentPosition, newPoint, p));
 				// start the move
@@ -567,35 +561,24 @@ namespace GCodePlotter
 			var first = gcodeInstructions.First();
 			if (first != null)
 			{
-				/*StartPoint = first.StartPoint;
-				EndPoint = first.EndPoint;*/
-
-				minX = first.minX; maxX = first.maxX;
-				minY = first.minY; maxY = first.maxY;
+				maxX = first.maxX;
+				maxY = first.maxY;
 			}
 
 			foreach (var plot in gcodeInstructions)
 			{
-				minX = Math.Min(minX, plot.minX); maxX = Math.Max(maxX, plot.maxX);
-				minY = Math.Min(minY, plot.minY); maxY = Math.Max(maxY, plot.maxY);
-
-				//EndPoint = plot.EndPoint;
+				maxX = Math.Max(maxX, plot.maxX);
+				maxY = Math.Max(maxY, plot.maxY);
 			}
 		}
 
-		/*public PointF StartPoint { get; set; }
-		public PointF EndPoint { get; set; }*/
-
-		public float minX, minY, maxX, maxY;
+		public float maxX, maxY;
 
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat("{0}   --   {1} lines -- {2},{3}-{4},{5}", Name, PlotPoints != null ? PlotPoints.Count : 0, minX, minY, maxX, maxY);
-			/*if (StartPoint == EndPoint)
-			{
-				sb.Append(" loop");
-			}*/
+			sb.AppendFormat("{0}   --   {1} lines -- {2},{3}", Name, PlotPoints != null ? PlotPoints.Count : 0, maxX, maxY);
+
 			return sb.ToString();
 		}
 
@@ -615,10 +598,43 @@ namespace GCodePlotter
 			StringBuilder sb = new StringBuilder();
 
 			sb.AppendFormat("(Start cutting path id: {0})", this.Name).AppendLine();
-			foreach (var line in this.GCodeInstructions)
+
+			if (multilayer)
 			{
-				sb.AppendLine(line.ToString());
+				var data = QuickSettings.Get["ZDepths"];
+				if (string.IsNullOrEmpty(data))
+				{
+					data = "-0.1,-0.15,-0.2";
+				}
+
+				string [] bits = null;
+				if (data.Contains(','))
+					bits = data.Split(',');
+				else
+					bits = new string[] { data };
+
+				foreach(var line in bits)
+				{
+					float f;
+					if (float.TryParse(line, out f))
+					{
+						sb.AppendFormat("(Start layer: {0:F4})", f).AppendLine();
+						foreach (var gCodeLine in this.GCodeInstructions)
+						{
+							sb.AppendLine(gCodeLine.ToString(true, zoverride: f));
+						}
+						sb.AppendFormat("(End layer: {0:F4})", f).AppendLine();
+					}
+				}
 			}
+			else
+			{
+				foreach (var line in this.GCodeInstructions)
+				{
+					sb.AppendLine(line.ToString(false));
+				}
+			}
+
 			sb.AppendFormat("(End cutting path id: {0})", this.Name).AppendLine();
 
 			return sb.ToString();

@@ -42,7 +42,7 @@
 			this.cmdOk.Location = new System.Drawing.Point(51, 157);
 			this.cmdOk.Name = "cmdOk";
 			this.cmdOk.Size = new System.Drawing.Size(82, 33);
-			this.cmdOk.TabIndex = 0;
+			this.cmdOk.TabIndex = 2;
 			this.cmdOk.Text = "Ok";
 			this.cmdOk.UseVisualStyleBackColor = true;
 			// 
@@ -60,14 +60,14 @@
 			this.textBox1.Location = new System.Drawing.Point(81, 130);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(219, 20);
-			this.textBox1.TabIndex = 2;
+			this.textBox1.TabIndex = 0;
 			// 
 			// label1
 			// 
 			this.label1.Location = new System.Drawing.Point(9, 9);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(291, 43);
-			this.label1.TabIndex = 3;
+			this.label1.TabIndex = 5;
 			this.label1.Text = "Please enter a new name for the following line segments, each will get a number a" +
     "ppended, so you at least have some form of uniqueness in them";
 			// 
@@ -86,12 +86,13 @@
 			this.cmdCancel.Location = new System.Drawing.Point(166, 157);
 			this.cmdCancel.Name = "cmdCancel";
 			this.cmdCancel.Size = new System.Drawing.Size(82, 33);
-			this.cmdCancel.TabIndex = 0;
+			this.cmdCancel.TabIndex = 3;
 			this.cmdCancel.Text = "Cancel";
 			this.cmdCancel.UseVisualStyleBackColor = true;
 			// 
 			// frmRenamePlots
 			// 
+			this.AcceptButton = this.cmdOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.cmdCancel;

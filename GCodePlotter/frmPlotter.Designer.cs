@@ -39,13 +39,14 @@
 			this.cmdToBottom = new System.Windows.Forms.Button();
 			this.cmdLoad = new System.Windows.Forms.Button();
 			this.cmdSave = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
+			this.cmdSaveLayers = new System.Windows.Forms.Button();
 			this.sfdSaveDialog = new System.Windows.Forms.SaveFileDialog();
 			this.ofdLoadDialog = new System.Windows.Forms.OpenFileDialog();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
+			this.cmdLayers = new System.Windows.Forms.Button();
 			this.txtFile = new System.Windows.Forms.TextBox();
 			this.cmdShowGCode = new System.Windows.Forms.Button();
 			this.cmdRenameSelection = new System.Windows.Forms.Button();
@@ -178,14 +179,15 @@
 			this.cmdSave.UseVisualStyleBackColor = true;
 			this.cmdSave.Click += new System.EventHandler(this.cmdSave_Click);
 			// 
-			// button3
+			// cmdSaveLayers
 			// 
-			this.button3.Location = new System.Drawing.Point(10, 97);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(102, 32);
-			this.button3.TabIndex = 9;
-			this.button3.Text = "Save Data (layers)";
-			this.button3.UseVisualStyleBackColor = true;
+			this.cmdSaveLayers.Location = new System.Drawing.Point(10, 97);
+			this.cmdSaveLayers.Name = "cmdSaveLayers";
+			this.cmdSaveLayers.Size = new System.Drawing.Size(102, 32);
+			this.cmdSaveLayers.TabIndex = 9;
+			this.cmdSaveLayers.Text = "Save Data (layers)";
+			this.cmdSaveLayers.UseVisualStyleBackColor = true;
+			this.cmdSaveLayers.Click += new System.EventHandler(this.cmdSaveLayers_Click);
 			// 
 			// sfdSaveDialog
 			// 
@@ -231,8 +233,9 @@
 			// 
 			// panel4
 			// 
+			this.panel4.Controls.Add(this.cmdLayers);
 			this.panel4.Controls.Add(this.txtFile);
-			this.panel4.Controls.Add(this.button3);
+			this.panel4.Controls.Add(this.cmdSaveLayers);
 			this.panel4.Controls.Add(this.cmdSave);
 			this.panel4.Controls.Add(this.cmdLoad);
 			this.panel4.Controls.Add(this.cmdShowGCode);
@@ -246,6 +249,16 @@
 			this.panel4.Size = new System.Drawing.Size(120, 508);
 			this.panel4.TabIndex = 11;
 			// 
+			// cmdLayers
+			// 
+			this.cmdLayers.Location = new System.Drawing.Point(10, 425);
+			this.cmdLayers.Name = "cmdLayers";
+			this.cmdLayers.Size = new System.Drawing.Size(99, 30);
+			this.cmdLayers.TabIndex = 11;
+			this.cmdLayers.Text = "Layer Editor";
+			this.cmdLayers.UseVisualStyleBackColor = true;
+			this.cmdLayers.Click += new System.EventHandler(this.cmdLayers_Click);
+			// 
 			// txtFile
 			// 
 			this.txtFile.Location = new System.Drawing.Point(6, 182);
@@ -257,7 +270,7 @@
 			// 
 			// cmdShowGCode
 			// 
-			this.cmdShowGCode.Location = new System.Drawing.Point(10, 373);
+			this.cmdShowGCode.Location = new System.Drawing.Point(10, 364);
 			this.cmdShowGCode.Name = "cmdShowGCode";
 			this.cmdShowGCode.Size = new System.Drawing.Size(85, 42);
 			this.cmdShowGCode.TabIndex = 2;
@@ -385,7 +398,7 @@
 		private System.Windows.Forms.Button cmdToBottom;
 		private System.Windows.Forms.Button cmdLoad;
 		private System.Windows.Forms.Button cmdSave;
-		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button cmdSaveLayers;
 		private System.Windows.Forms.SaveFileDialog sfdSaveDialog;
 		private System.Windows.Forms.OpenFileDialog ofdLoadDialog;
 		private System.Windows.Forms.Panel panel1;
@@ -401,6 +414,7 @@
 		private System.Windows.Forms.RadioButton radZoomSixteen;
 		private System.Windows.Forms.Button cmdRenameSelection;
 		private System.Windows.Forms.Button cmdShowGCode;
+		private System.Windows.Forms.Button cmdLayers;
     }
 }
 

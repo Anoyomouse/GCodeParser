@@ -464,12 +464,28 @@ namespace GCodePlotter
 
 		private void cmdSave_Click(object sender, EventArgs e)
 		{
+			SaveGCodes(false);
+		}
+
+		private void cmdSaveLayers_Click(object sender, EventArgs e)
+		{
+			SaveGCodes(true);
+		}
+
+		private void SaveGCodes(bool layers)
+		{
 			#region Code
 			var result = sfdSaveDialog.ShowDialog();
 			if (result == System.Windows.Forms.DialogResult.OK)
 			{
 				var file = new FileInfo(sfdSaveDialog.FileName);
-				QuickSettings.Get["LastOpenedFile"] = file.FullName;
+				if (!layers)
+				{
+					QuickSettings.Get["LastOpenedFile"] = file.FullName;
+				}
+
+				if (file.Exists)
+					file.Delete();
 
 				var tw = new StreamWriter(file.OpenWrite());
 
@@ -481,15 +497,31 @@ namespace GCodePlotter
 				tw.WriteLine("G21 (All units in mm)");
 				tw.WriteLine("(Header end.)");
 				tw.WriteLine();
-				myPlots.ForEach(x => {
+				myPlots.ForEach(x =>
+				{
 					tw.WriteLine();
-					tw.Write(x.BuildGCodeOutput(false));
+					tw.Write(x.BuildGCodeOutput(layers));
 				});
 				tw.Flush();
-				
+
+				tw.WriteLine();
+				tw.WriteLine("(Footer)");
+				tw.WriteLine("G00 Z 5.00");
+				tw.WriteLine("G00 X 0.00 Y 0.00");
+				tw.WriteLine("(Footer end.)");
+				tw.WriteLine();
+
+				tw.Flush();
+
 				tw.Close();
 			}
 			#endregion
+		}
+
+		private void cmdLayers_Click(object sender, EventArgs e)
+		{
+			frmLayerEditor frm = new frmLayerEditor();
+			frm.ShowDialog();
 		}
 	}
 }

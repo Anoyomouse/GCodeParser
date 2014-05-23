@@ -50,6 +50,12 @@
     <Compile Include="frmGCodePreview.Designer.cs">
       <DependentUpon>frmGCodePreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmLayerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLayerEditor.Designer.cs">
+      <DependentUpon>frmLayerEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPlotter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +80,9 @@
     <Compile Include="SimpleGCodeParser.cs" />
     <EmbeddedResource Include="frmGCodePreview.resx">
       <DependentUpon>frmGCodePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLayerEditor.resx">
+      <DependentUpon>frmLayerEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPlotter.resx">
       <DependentUpon>frmPlotter.cs</DependentUpon>
