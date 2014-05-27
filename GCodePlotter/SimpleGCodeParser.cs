@@ -241,6 +241,8 @@ namespace GCodePlotter
 		public float? J { get; set; }
 
 		internal float maxX, maxY;
+		internal PointF StartPoint;
+		internal PointF EndPoint;
 
 		public string CommandType
 		{
@@ -326,8 +328,15 @@ namespace GCodePlotter
 			if (!string.IsNullOrWhiteSpace(Comment))
 				sb.AppendFormat(" ({0})", Comment);
 
+			//this.GetXY(sb);
+
 			return sb.ToString();
 			#endregion
+		}
+
+		private StringBuilder GetXY(StringBuilder sb)
+		{
+			return sb.AppendFormat(" ({0},{1} - {2},{3})", StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
 		}
 
 		internal bool IsOnlyComment { get; private set; }
@@ -382,6 +391,9 @@ namespace GCodePlotter
 				maxX = Math.Max(currentPoint.X, pos.X);
 				maxY = Math.Max(currentPoint.Y, pos.Y);
 
+				StartPoint = new PointF(currentPoint.X, currentPoint.Y);
+				EndPoint = new PointF(pos.X, pos.Y);
+
 				var line = new LinePoints(currentPoint, pos, CommandEnum == CommandList.RapidMove ? PenColorList.RapidMove : PenColorList.NormalMove);
 				currentPoint.X = pos.X;
 				currentPoint.Y = pos.Y;
@@ -395,7 +407,11 @@ namespace GCodePlotter
 				center.X = current.X + this.I ?? 0;
 				center.Y = current.Y + this.J ?? 0;
 
+				StartPoint = new PointF(current.X, current.Y);
+
 				var arcPoints = RenderArc(center, pos, (CommandEnum == CommandList.CWArc), ref currentPoint);
+				EndPoint = new PointF(currentPoint.X, currentPoint.Y);
+
 				return arcPoints;
 			}
 

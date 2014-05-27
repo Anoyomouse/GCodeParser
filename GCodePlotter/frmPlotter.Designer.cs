@@ -77,9 +77,9 @@
 			// button1
 			// 
 			this.button1.Enabled = false;
-			this.button1.Location = new System.Drawing.Point(10, 212);
+			this.button1.Location = new System.Drawing.Point(10, 123);
 			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.Size = new System.Drawing.Size(102, 32);
 			this.button1.TabIndex = 2;
 			this.button1.Text = "Parse";
 			this.button1.UseVisualStyleBackColor = true;
@@ -87,9 +87,9 @@
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(10, 250);
+			this.button2.Location = new System.Drawing.Point(10, 161);
 			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
+			this.button2.Size = new System.Drawing.Size(102, 32);
 			this.button2.TabIndex = 2;
 			this.button2.Text = "Redraw";
 			this.button2.UseVisualStyleBackColor = true;
@@ -161,9 +161,9 @@
 			// 
 			// cmdLoad
 			// 
-			this.cmdLoad.Location = new System.Drawing.Point(10, 21);
+			this.cmdLoad.Location = new System.Drawing.Point(10, 9);
 			this.cmdLoad.Name = "cmdLoad";
-			this.cmdLoad.Size = new System.Drawing.Size(85, 32);
+			this.cmdLoad.Size = new System.Drawing.Size(102, 32);
 			this.cmdLoad.TabIndex = 9;
 			this.cmdLoad.Text = "Load Data";
 			this.cmdLoad.UseVisualStyleBackColor = true;
@@ -171,9 +171,9 @@
 			// 
 			// cmdSave
 			// 
-			this.cmdSave.Location = new System.Drawing.Point(10, 59);
+			this.cmdSave.Location = new System.Drawing.Point(10, 47);
 			this.cmdSave.Name = "cmdSave";
-			this.cmdSave.Size = new System.Drawing.Size(85, 32);
+			this.cmdSave.Size = new System.Drawing.Size(102, 32);
 			this.cmdSave.TabIndex = 9;
 			this.cmdSave.Text = "Save Data";
 			this.cmdSave.UseVisualStyleBackColor = true;
@@ -181,7 +181,7 @@
 			// 
 			// cmdSaveLayers
 			// 
-			this.cmdSaveLayers.Location = new System.Drawing.Point(10, 97);
+			this.cmdSaveLayers.Location = new System.Drawing.Point(10, 85);
 			this.cmdSaveLayers.Name = "cmdSaveLayers";
 			this.cmdSaveLayers.Size = new System.Drawing.Size(102, 32);
 			this.cmdSaveLayers.TabIndex = 9;
@@ -234,7 +234,6 @@
 			// panel4
 			// 
 			this.panel4.Controls.Add(this.cmdLayers);
-			this.panel4.Controls.Add(this.txtFile);
 			this.panel4.Controls.Add(this.cmdSaveLayers);
 			this.panel4.Controls.Add(this.cmdSave);
 			this.panel4.Controls.Add(this.cmdLoad);
@@ -251,9 +250,9 @@
 			// 
 			// cmdLayers
 			// 
-			this.cmdLayers.Location = new System.Drawing.Point(10, 425);
+			this.cmdLayers.Location = new System.Drawing.Point(10, 275);
 			this.cmdLayers.Name = "cmdLayers";
-			this.cmdLayers.Size = new System.Drawing.Size(99, 30);
+			this.cmdLayers.Size = new System.Drawing.Size(102, 32);
 			this.cmdLayers.TabIndex = 11;
 			this.cmdLayers.Text = "Layer Editor";
 			this.cmdLayers.UseVisualStyleBackColor = true;
@@ -261,18 +260,19 @@
 			// 
 			// txtFile
 			// 
-			this.txtFile.Location = new System.Drawing.Point(6, 182);
+			this.txtFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtFile.Location = new System.Drawing.Point(280, 9);
 			this.txtFile.Name = "txtFile";
 			this.txtFile.ReadOnly = true;
-			this.txtFile.Size = new System.Drawing.Size(103, 20);
+			this.txtFile.Size = new System.Drawing.Size(351, 20);
 			this.txtFile.TabIndex = 10;
 			this.txtFile.TextChanged += new System.EventHandler(this.txtFile_TextChanged);
 			// 
 			// cmdShowGCode
 			// 
-			this.cmdShowGCode.Location = new System.Drawing.Point(10, 364);
+			this.cmdShowGCode.Location = new System.Drawing.Point(10, 237);
 			this.cmdShowGCode.Name = "cmdShowGCode";
-			this.cmdShowGCode.Size = new System.Drawing.Size(85, 42);
+			this.cmdShowGCode.Size = new System.Drawing.Size(102, 32);
 			this.cmdShowGCode.TabIndex = 2;
 			this.cmdShowGCode.Text = "Preview GCode";
 			this.cmdShowGCode.UseVisualStyleBackColor = true;
@@ -280,9 +280,9 @@
 			// 
 			// cmdRenameSelection
 			// 
-			this.cmdRenameSelection.Location = new System.Drawing.Point(10, 288);
+			this.cmdRenameSelection.Location = new System.Drawing.Point(10, 199);
 			this.cmdRenameSelection.Name = "cmdRenameSelection";
-			this.cmdRenameSelection.Size = new System.Drawing.Size(85, 42);
+			this.cmdRenameSelection.Size = new System.Drawing.Size(102, 32);
 			this.cmdRenameSelection.TabIndex = 2;
 			this.cmdRenameSelection.Text = "Rename Selection";
 			this.cmdRenameSelection.UseVisualStyleBackColor = true;
@@ -293,7 +293,7 @@
 			this.cmdSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.cmdSettings.Location = new System.Drawing.Point(8, 470);
 			this.cmdSettings.Name = "cmdSettings";
-			this.cmdSettings.Size = new System.Drawing.Size(104, 32);
+			this.cmdSettings.Size = new System.Drawing.Size(102, 32);
 			this.cmdSettings.TabIndex = 2;
 			this.cmdSettings.Text = "Settings";
 			this.cmdSettings.UseVisualStyleBackColor = true;
@@ -302,6 +302,7 @@
 			// panel5
 			// 
 			this.panel5.Controls.Add(this.radZoomSixteen);
+			this.panel5.Controls.Add(this.txtFile);
 			this.panel5.Controls.Add(this.radZoomEight);
 			this.panel5.Controls.Add(this.radZoomFour);
 			this.panel5.Controls.Add(this.radZoomTwo);
@@ -378,7 +379,6 @@
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
 			this.panel4.ResumeLayout(false);
-			this.panel4.PerformLayout();
 			this.panel5.ResumeLayout(false);
 			this.panel5.PerformLayout();
 			this.ResumeLayout(false);
