@@ -336,7 +336,7 @@ namespace GCodePlotter
 
 		private StringBuilder GetXY(StringBuilder sb)
 		{
-			return sb.AppendFormat(" ({0},{1} - {2},{3})", StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
+			return sb.AppendFormat(" ({0:F4},{1:F4} - {2:F4},{3:F4})", StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
 		}
 
 		internal bool IsOnlyComment { get; private set; }
