@@ -18,9 +18,12 @@ namespace GCodePlotter
 			InitializeComponent();
 		}
 
+		bool bDataLoaded = false;
 		private void frmPlotter_Load(object sender, EventArgs e)
 		{
 			#region Code
+			bDataLoaded = false;
+
 			if (renderImage == null ||
 				renderImage.Width != pictureBox1.Width ||
 				renderImage.Height != pictureBox1.Height)
@@ -45,8 +48,8 @@ namespace GCodePlotter
 					txtFile.Text = fil.Name;
 					txtFile.Tag = fil.FullName;
 					Application.DoEvents();
-					button1.Enabled = true;
-					button1.PerformClick();
+					cmdParseData.Enabled = true;
+					cmdParseData.PerformClick();
 				}
 			}
 			#endregion
@@ -55,15 +58,31 @@ namespace GCodePlotter
 		//List<GCodeInstruction> parsedPlots;
 		List<Plot> myPlots;
 		Image renderImage = null;
-		private void button1_Click(object sender, EventArgs e)
+		private void cmdParseData_Click(object sender, EventArgs e)
 		{
 			#region Code
+
+			if (bDataLoaded)
+			{
+				if (AskToLoadData() == DialogResult.No)
+				{
+					return;
+				}
+			}
+
 			FileInfo file = new FileInfo(txtFile.Tag.ToString());
 			StreamReader tr = file.OpenText();
 			string data = tr.ReadToEnd();
 			tr.Close();
 
 			ParseText(data);
+			#endregion
+		}
+
+		private DialogResult AskToLoadData()
+		{
+			#region Code
+			return MessageBox.Show("Doing this will load/reload data, are you sure you want to load this data deleting your old data?", "Question!", MessageBoxButtons.YesNo);
 			#endregion
 		}
 
@@ -140,6 +159,7 @@ namespace GCodePlotter
 			myPlots.ForEach(x => { x.FinalizePlot(); lstPlots.Items.Add(x); });
 
 			RenderPlots();
+			bDataLoaded = true;
 			#endregion
 		}
 
@@ -157,7 +177,7 @@ namespace GCodePlotter
 			#endregion
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void cmdRedraw_Click(object sender, EventArgs e)
 		{
 			#region Code
 			RenderPlots();
@@ -353,6 +373,11 @@ namespace GCodePlotter
 		private void cmdLoad_Click(object sender, EventArgs e)
 		{
 			#region Code
+			if (AskToLoadData() == DialogResult.No)
+			{
+				return;
+			}
+
 			var result = ofdLoadDialog.ShowDialog();
 			if (result == System.Windows.Forms.DialogResult.OK)
 			{
@@ -366,17 +391,16 @@ namespace GCodePlotter
 				QuickSettings.Get["LastOpenedFile"] = file.FullName;
 
 				StreamReader tr = file.OpenText();
+
+				txtFile.Text = file.Name;
+				txtFile.Tag = file.FullName;
+
 				string data = tr.ReadToEnd();
 				tr.Close();
 
 				ParseText(data);
 			}
 			#endregion
-		}
-
-		private void txtFile_TextChanged(object sender, EventArgs e)
-		{
-
 		}
 
 		private void frmPlotter_ResizeEnd(object sender, EventArgs e)
