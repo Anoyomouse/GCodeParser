@@ -226,6 +226,7 @@ namespace GCodePlotter
 					case 'F': this.F = dist; break;
 					case 'I': this.I = dist; break;
 					case 'J': this.J = dist; break;
+					case 'P': this.P = dist; break;
 				}
 			}
 			#endregion
@@ -239,6 +240,7 @@ namespace GCodePlotter
 		public float? F { get; set; }
 		public float? I { get; set; }
 		public float? J { get; set; }
+		public float? P { get; set; }
 
 		internal float maxX, maxY;
 		internal PointF StartPoint;
@@ -259,6 +261,8 @@ namespace GCodePlotter
 					case "G02": return "Clockwise arc motion";
 					case "G3":
 					case "G03": return "Counter clockwise arc motion";
+					case "G4":
+					case "G04": return "Dwell";
 					case "G90": return "Absolute Mode";
 					case "G91": return "Relative Mode";
 					case "G21": return "G21";
@@ -325,6 +329,8 @@ namespace GCodePlotter
 			if (I.HasValue) sb.AppendFormat(" I {0:F4}", this.I);
 			if (J.HasValue) sb.AppendFormat(" J {0:F4}", this.J);
 			if (F.HasValue) sb.AppendFormat(" F {0:F4}", this.F);
+			if (P.HasValue) sb.AppendFormat(" P {0:F4}", this.P);
+
 			if (!string.IsNullOrWhiteSpace(Comment))
 				sb.AppendFormat(" ({0})", Comment);
 
@@ -347,7 +353,8 @@ namespace GCodePlotter
 			if (CommandEnum == CommandList.NormalMove ||
 				CommandEnum == CommandList.RapidMove ||
 				CommandEnum == CommandList.CWArc ||
-				CommandEnum == CommandList.CCWArc)
+				CommandEnum == CommandList.CCWArc ||
+				CommandEnum == CommandList.Dwell)
 				return true;
 			return false;
 			#endregion

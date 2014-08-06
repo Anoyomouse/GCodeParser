@@ -139,7 +139,12 @@ namespace GCodePlotter
 				}
 				else if (line.CanRender())
 				{
-					currentPlot.PlotPoints.AddRange(line.RenderCode(ref currentPoint));
+					var data = line.RenderCode(ref currentPoint);
+					if (data != null)
+					{
+						currentPlot.PlotPoints.AddRange(data);
+					}
+
 					currentPlot.GCodeInstructions.Add(line);
 				}
 			}
@@ -406,18 +411,26 @@ namespace GCodePlotter
 		private void frmPlotter_ResizeEnd(object sender, EventArgs e)
 		{
 			#region Code
+			if (this.WindowState == FormWindowState.Minimized)
+			{
+				return;
+			}
+
 			if (renderImage == null ||
 				renderImage.Width != pictureBox1.Width ||
 				renderImage.Height != pictureBox1.Height)
 			{
-				renderImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-
-				if (pictureBox1.Image != null)
+				if (pictureBox1 != null)
 				{
-					pictureBox1.Image.Dispose();
-				}
+					renderImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
-				pictureBox1.Image = renderImage;
+					if (pictureBox1.Image != null)
+					{
+						pictureBox1.Image.Dispose();
+					}
+
+					pictureBox1.Image = renderImage;
+				}
 			}
 
 			RenderPlots();
