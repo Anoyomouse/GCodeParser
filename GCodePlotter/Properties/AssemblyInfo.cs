@@ -1,4 +1,9 @@
-﻿using System.Reflection;
+﻿/**
+ * Copyright (c) David-John Miller AKA Anoyomouse 2014
+ *
+ * See LICENCE in the project directory for licence information
+ **/
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,7 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GCodePlotter")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © David-John Miller AKA Anoyomouse 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

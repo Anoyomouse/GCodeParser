@@ -1,4 +1,9 @@
-﻿namespace GCodePlotter
+﻿/**
+ * Copyright (c) David-John Miller AKA Anoyomouse 2014
+ *
+ * See LICENCE in the project directory for licence information
+ **/
+namespace GCodePlotter
 {
 	partial class frmLayerEditor
 	{
