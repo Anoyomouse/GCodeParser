@@ -61,21 +61,22 @@ namespace GCodePlotter
 			this.radZoomEight = new System.Windows.Forms.RadioButton();
 			this.radZoomFour = new System.Windows.Forms.RadioButton();
 			this.radZoomTwo = new System.Windows.Forms.RadioButton();
+			this.panel6 = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
 			this.panel3.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.panel4.SuspendLayout();
 			this.panel5.SuspendLayout();
+			this.panel6.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
 			// 
 			this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pictureBox1.Location = new System.Drawing.Point(5, 5);
+			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(647, 470);
+			this.pictureBox1.Size = new System.Drawing.Size(721, 426);
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			// 
@@ -107,7 +108,7 @@ namespace GCodePlotter
 			this.lstPlots.Location = new System.Drawing.Point(0, 0);
 			this.lstPlots.Name = "lstPlots";
 			this.lstPlots.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-			this.lstPlots.Size = new System.Drawing.Size(265, 475);
+			this.lstPlots.Size = new System.Drawing.Size(265, 476);
 			this.lstPlots.TabIndex = 4;
 			this.lstPlots.SelectedIndexChanged += new System.EventHandler(this.lstPlots_SelectedIndexChanged);
 			// 
@@ -210,9 +211,9 @@ namespace GCodePlotter
 			this.panel1.Controls.Add(this.panel3);
 			this.panel1.Controls.Add(this.panel2);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panel1.Location = new System.Drawing.Point(772, 5);
+			this.panel1.Location = new System.Drawing.Point(1021, 5);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(324, 508);
+			this.panel1.Size = new System.Drawing.Size(324, 509);
 			this.panel1.TabIndex = 10;
 			// 
 			// panel3
@@ -224,14 +225,14 @@ namespace GCodePlotter
 			this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panel3.Location = new System.Drawing.Point(265, 0);
 			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(59, 475);
+			this.panel3.Size = new System.Drawing.Size(59, 476);
 			this.panel3.TabIndex = 10;
 			// 
 			// panel2
 			// 
 			this.panel2.Controls.Add(this.checkBox1);
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel2.Location = new System.Drawing.Point(0, 475);
+			this.panel2.Location = new System.Drawing.Point(0, 476);
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(324, 33);
 			this.panel2.TabIndex = 9;
@@ -248,9 +249,9 @@ namespace GCodePlotter
 			this.panel4.Controls.Add(this.cmdRedraw);
 			this.panel4.Controls.Add(this.cmdParseData);
 			this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panel4.Location = new System.Drawing.Point(652, 5);
+			this.panel4.Location = new System.Drawing.Point(901, 5);
 			this.panel4.Name = "panel4";
-			this.panel4.Size = new System.Drawing.Size(120, 508);
+			this.panel4.Size = new System.Drawing.Size(120, 509);
 			this.panel4.TabIndex = 11;
 			// 
 			// cmdLayers
@@ -286,7 +287,7 @@ namespace GCodePlotter
 			// cmdSettings
 			// 
 			this.cmdSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.cmdSettings.Location = new System.Drawing.Point(8, 470);
+			this.cmdSettings.Location = new System.Drawing.Point(8, 471);
 			this.cmdSettings.Name = "cmdSettings";
 			this.cmdSettings.Size = new System.Drawing.Size(102, 32);
 			this.cmdSettings.TabIndex = 2;
@@ -300,7 +301,7 @@ namespace GCodePlotter
 			this.txtFile.Location = new System.Drawing.Point(280, 9);
 			this.txtFile.Name = "txtFile";
 			this.txtFile.ReadOnly = true;
-			this.txtFile.Size = new System.Drawing.Size(351, 20);
+			this.txtFile.Size = new System.Drawing.Size(600, 20);
 			this.txtFile.TabIndex = 10;
 			// 
 			// panel5
@@ -311,9 +312,9 @@ namespace GCodePlotter
 			this.panel5.Controls.Add(this.radZoomFour);
 			this.panel5.Controls.Add(this.radZoomTwo);
 			this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel5.Location = new System.Drawing.Point(5, 475);
+			this.panel5.Location = new System.Drawing.Point(5, 476);
 			this.panel5.Name = "panel5";
-			this.panel5.Size = new System.Drawing.Size(647, 38);
+			this.panel5.Size = new System.Drawing.Size(896, 38);
 			this.panel5.TabIndex = 12;
 			// 
 			// radZoomSixteen
@@ -362,12 +363,22 @@ namespace GCodePlotter
 			this.radZoomTwo.UseVisualStyleBackColor = true;
 			this.radZoomTwo.CheckedChanged += new System.EventHandler(this.radScaleChange);
 			// 
+			// panel6
+			// 
+			this.panel6.AutoScroll = true;
+			this.panel6.Controls.Add(this.pictureBox1);
+			this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel6.Location = new System.Drawing.Point(5, 5);
+			this.panel6.Name = "panel6";
+			this.panel6.Size = new System.Drawing.Size(896, 471);
+			this.panel6.TabIndex = 13;
+			// 
 			// frmPlotter
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1101, 518);
-			this.Controls.Add(this.pictureBox1);
+			this.ClientSize = new System.Drawing.Size(1350, 519);
+			this.Controls.Add(this.panel6);
 			this.Controls.Add(this.panel5);
 			this.Controls.Add(this.panel4);
 			this.Controls.Add(this.panel1);
@@ -385,6 +396,7 @@ namespace GCodePlotter
 			this.panel4.ResumeLayout(false);
 			this.panel5.ResumeLayout(false);
 			this.panel5.PerformLayout();
+			this.panel6.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
@@ -418,6 +430,7 @@ namespace GCodePlotter
 		private System.Windows.Forms.Button cmdRenameSelection;
 		private System.Windows.Forms.Button cmdShowGCode;
 		private System.Windows.Forms.Button cmdLayers;
+		private System.Windows.Forms.Panel panel6;
     }
 }
 

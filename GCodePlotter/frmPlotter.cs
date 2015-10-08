@@ -29,7 +29,7 @@ namespace GCodePlotter
 			#region Code
 			bDataLoaded = false;
 
-			if (renderImage == null ||
+			/*if (renderImage == null ||
 				renderImage.Width != pictureBox1.Width ||
 				renderImage.Height != pictureBox1.Height)
 			{
@@ -41,7 +41,7 @@ namespace GCodePlotter
 				}
 
 				pictureBox1.Image = renderImage;
-			}
+			}*/
 
 			var lastFile = QuickSettings.Get["LastOpenedFile"];
 			if (!string.IsNullOrWhiteSpace(lastFile))
@@ -337,9 +337,6 @@ namespace GCodePlotter
 		private void RenderPlots()
 		{
 			#region Code
-			var graphics = Graphics.FromImage(renderImage);
-			graphics.Clear(ColorHelper.GetColor(PenColorList.Background));
-
 			var multiplier = 4f;
 			if (radZoomTwo.Checked) multiplier = 2;
 			else if (radZoomFour.Checked) multiplier = 4;
@@ -347,6 +344,40 @@ namespace GCodePlotter
 			else if (radZoomSixteen.Checked) multiplier = 16;
 
 			var scale = (10 * multiplier);
+
+			var absMaxX = 0f;
+			var absMaxY = 0f;
+
+			if (myPlots != null && myPlots.Count > 0)
+			{
+				foreach (Plot plotItem in myPlots)
+				{
+					absMaxX = Math.Max(absMaxX, plotItem.maxX);
+					absMaxY = Math.Max(absMaxY, plotItem.maxY);
+				}
+			}
+
+			absMaxX *= scale;
+			absMaxY *= scale;
+
+			var intAbsMaxX = (int)(absMaxX + 1) / 10 + 10;
+			var intAbsMaxY = (int)(absMaxY + 1) / 10 + 10;
+
+			if (renderImage == null || intAbsMaxX != renderImage.Width || intAbsMaxY != renderImage.Height)
+			{
+				if (renderImage != null)
+				{
+					renderImage.Dispose();
+				}
+
+				renderImage = new Bitmap(intAbsMaxX, intAbsMaxY);
+				pictureBox1.Width = intAbsMaxX;
+				pictureBox1.Height = intAbsMaxY;
+				pictureBox1.Image = renderImage;
+			}
+
+			var graphics = Graphics.FromImage(renderImage);
+			graphics.Clear(ColorHelper.GetColor(PenColorList.Background));
 
 			Pen gridPen = ColorHelper.GetPen(PenColorList.GridLines);
 			for (var x = 1; x < pictureBox1.Width / scale; x++)
@@ -421,23 +452,6 @@ namespace GCodePlotter
 				return;
 			}
 
-			if (renderImage == null ||
-				renderImage.Width != pictureBox1.Width ||
-				renderImage.Height != pictureBox1.Height)
-			{
-				if (pictureBox1 != null)
-				{
-					renderImage = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-
-					if (pictureBox1.Image != null)
-					{
-						pictureBox1.Image.Dispose();
-					}
-
-					pictureBox1.Image = renderImage;
-				}
-			}
-
 			RenderPlots();
 			#endregion
 		}
@@ -500,7 +514,7 @@ namespace GCodePlotter
 		{
 			frmGCodePreview frmPreview = new frmGCodePreview();
 
-			frmPreview.GCodeText = (lstPlots.SelectedItem as Plot).BuildGCodeOutput(false);
+			frmPreview.GCodePlot = (lstPlots.SelectedItem as Plot);
 			frmPreview.Show();
 		}
 

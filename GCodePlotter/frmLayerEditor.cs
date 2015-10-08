@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,11 +41,11 @@ namespace GCodePlotter
 			foreach(var line in bits)
 			{
 				float f;
-				if (float.TryParse(line, out f))
+				if (float.TryParse(line, NumberStyles.Float, CultureInfo.InvariantCulture, out f))
 				{
 					if (sb.Length > 0)
 						sb.AppendLine();
-					sb.Append(f.ToString());
+					sb.Append(f.ToString(CultureInfo.InvariantCulture));
 				}
 			}
 
@@ -67,11 +68,11 @@ namespace GCodePlotter
 			foreach(var line in bits)
 			{
 				float f;
-				if (float.TryParse(line, out f))
+				if (float.TryParse(line, NumberStyles.Float, CultureInfo.InvariantCulture, out f))
 				{
 					if (sb.Length > 0)
 						sb.Append(',');
-					sb.Append(f.ToString());
+					sb.Append(f.ToString(CultureInfo.InvariantCulture));
 				}
 			}
 

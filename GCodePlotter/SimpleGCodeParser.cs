@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -158,6 +159,8 @@ namespace GCodePlotter
 
 	public class GCodeInstruction
 	{
+		public readonly IFormatProvider InvariantCulture = CultureInfo.InvariantCulture;
+
 		//public const float Multiplier = 1;
 		public const float CurveSection = 1;
 
@@ -182,7 +185,7 @@ namespace GCodePlotter
 
 				if (nxt + 1 < line.Length)
 				{
-					line = string.Format("{0} {1}", line.Substring(0, fst - 1), line.Substring(nxt + 1));
+					line = string.Format(InvariantCulture, "{0} {1}", line.Substring(0, fst - 1), line.Substring(nxt + 1));
 				}
 				else
 				{
@@ -209,17 +212,17 @@ namespace GCodePlotter
 					i++;
 					if (i >= bits.Length)
 					{
-						throw new ParsingException(string.Format("No distance specified for {0}", axis));
+						throw new ParsingException(string.Format(InvariantCulture, "No distance specified for {0}", axis));
 					}
 
-					dist = float.Parse(bits[i]);
+					dist = float.Parse(bits[i], InvariantCulture);
 				}
 				else
 				{
-					dist = float.Parse(bits[i].Substring(1));
+					dist = float.Parse(bits[i].Substring(1), InvariantCulture);
 				}
 
-				if (!dist.HasValue) throw new ParsingException(string.Format("No distance specified for {0}", axis));
+				if (!dist.HasValue) throw new ParsingException(string.Format(InvariantCulture, "No distance specified for {0}", axis));
 
 				if (dist.HasValue) { dist = dist.Value; } // * Multiplier
 
@@ -247,6 +250,7 @@ namespace GCodePlotter
 		public float? J { get; set; }
 		public float? P { get; set; }
 
+		internal float minX, minY;
 		internal float maxX, maxY;
 		internal PointF StartPoint;
 		internal PointF EndPoint;
@@ -358,12 +362,14 @@ namespace GCodePlotter
 			if (CommandEnum == CommandList.NormalMove ||
 				CommandEnum == CommandList.RapidMove ||
 				CommandEnum == CommandList.CWArc ||
-				CommandEnum == CommandList.CCWArc ||
-				CommandEnum == CommandList.Dwell)
+				CommandEnum == CommandList.CCWArc) //||
+				//CommandEnum == CommandList.Dwell)
 				return true;
 			return false;
 			#endregion
 		}
+
+		public List<LinePoints> CachedLinePoints { get; set; }
 
 		internal List<LinePoints> RenderCode(ref PointF currentPoint)
 		{
@@ -403,6 +409,9 @@ namespace GCodePlotter
 				maxX = Math.Max(currentPoint.X, pos.X);
 				maxY = Math.Max(currentPoint.Y, pos.Y);
 
+				minX = Math.Min(currentPoint.X, pos.X);
+				minY = Math.Min(currentPoint.Y, pos.Y);
+
 				StartPoint = new PointF(currentPoint.X, currentPoint.Y);
 				EndPoint = new PointF(pos.X, pos.Y);
 
@@ -418,6 +427,9 @@ namespace GCodePlotter
 				PointF current = new PointF(currentPoint.X, currentPoint.Y);
 				center.X = current.X + this.I ?? 0;
 				center.Y = current.Y + this.J ?? 0;
+
+				minX = currentPoint.X;
+				minY = currentPoint.Y;
 
 				StartPoint = new PointF(current.X, current.Y);
 
@@ -508,6 +520,9 @@ namespace GCodePlotter
 				maxX = Math.Max(maxX, newPoint.X);
 				maxY = Math.Max(maxY, newPoint.Y);
 
+				minX = Math.Min(minX, newPoint.X);
+				minY = Math.Min(minY, newPoint.Y);
+
 				output.Add(new LinePoints(currentPosition, newPoint, p));
 				// start the move
 				currentPosition.X = newPoint.X;
@@ -550,7 +565,7 @@ namespace GCodePlotter
 		public float Y2 { get; set; }
 		public PenColorList Pen { get; set; }
 
-		public void DrawSegment(Graphics g, int height, bool highlight = false, float Multiplier = 1, bool renderG0 = true)
+		public void DrawSegment(Graphics g, int height, bool highlight = false, float Multiplier = 1, bool renderG0 = true, int left = 0, int top = 0)
 		{
 			#region Code
 			if (Pen == PenColorList.RapidMove && !renderG0)
@@ -559,17 +574,17 @@ namespace GCodePlotter
 			}
 			else if (Pen == PenColorList.RapidMove && highlight)
 			{
-				g.DrawLine(ColorHelper.GetPen(PenColorList.RapidMoveHilight), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(ColorHelper.GetPen(PenColorList.RapidMoveHilight), (X1 - left) * Multiplier, height - ((Y1 - top) * Multiplier), (X2 - left) * Multiplier, height - ((Y2 - top) * Multiplier));
 				return;
 			}
 
 			if (highlight)
 			{
-				g.DrawLine(ColorHelper.GetPen(PenColorList.LineHighlight), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(ColorHelper.GetPen(PenColorList.LineHighlight), (X1 - left) * Multiplier, height - ((Y1 - top) * Multiplier), (X2 - left) * Multiplier, height - ((Y2 - top) * Multiplier));
 			}
 			else
 			{
-				g.DrawLine(ColorHelper.GetPen(Pen), X1 * Multiplier, height - (Y1 * Multiplier), X2 * Multiplier, height - (Y2 * Multiplier));
+				g.DrawLine(ColorHelper.GetPen(Pen), (X1 - left) * Multiplier, height - ((Y1 - top) * Multiplier), (X2 - left) * Multiplier, height - ((Y2 - top) * Multiplier));
 			}
 			#endregion
 		}
@@ -591,15 +606,22 @@ namespace GCodePlotter
 			{
 				maxX = first.maxX;
 				maxY = first.maxY;
+
+				minX = first.StartPoint.X;
+				minY = first.StartPoint.Y;
 			}
 
 			foreach (var plot in gcodeInstructions)
 			{
+				minX = Math.Min(minX, plot.minX);
+				minY = Math.Min(minY, plot.minY);
+
 				maxX = Math.Max(maxX, plot.maxX);
 				maxY = Math.Max(maxY, plot.maxY);
 			}
 		}
 
+		public float minX, minY;
 		public float maxX, maxY;
 
 		public override string ToString()
@@ -615,7 +637,11 @@ namespace GCodePlotter
 			this.PlotPoints.Clear();
 			foreach (var line in this.GCodeInstructions)
 			{
-				this.PlotPoints.AddRange(line.RenderCode(ref currentPoint));
+				if (line.CanRender())
+				{
+					line.CachedLinePoints = line.RenderCode(ref currentPoint);
+					this.PlotPoints.AddRange(line.CachedLinePoints);
+				}
 			}
 
 			this.FinalizePlot();
@@ -644,14 +670,14 @@ namespace GCodePlotter
 				foreach(var line in bits)
 				{
 					float f;
-					if (float.TryParse(line, out f))
+					if (float.TryParse(line, NumberStyles.Float, CultureInfo.InvariantCulture, out f))
 					{
-						sb.AppendFormat("(Start layer: {0:F4})", f).AppendLine();
+						sb.AppendFormat(CultureInfo.InvariantCulture, "(Start layer: {0:F4})", f).AppendLine();
 						foreach (var gCodeLine in this.GCodeInstructions)
 						{
 							sb.AppendLine(gCodeLine.ToString(true, zoverride: f));
 						}
-						sb.AppendFormat("(End layer: {0:F4})", f).AppendLine();
+						sb.AppendFormat(CultureInfo.InvariantCulture, "(End layer: {0:F4})", f).AppendLine();
 					}
 				}
 			}
@@ -663,7 +689,7 @@ namespace GCodePlotter
 				}
 			}
 
-			sb.AppendFormat("(End cutting path id: {0})", this.Name).AppendLine();
+			sb.AppendFormat(CultureInfo.InvariantCulture, "(End cutting path id: {0})", this.Name).AppendLine();
 
 			return sb.ToString();
 		}

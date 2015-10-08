@@ -37,6 +37,10 @@ namespace GCodePlotter
 			this.cmdCancel = new System.Windows.Forms.Button();
 			this.cmdOk = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.txLayerDepth = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -50,7 +54,7 @@ namespace GCodePlotter
 			// cmdCancel
 			// 
 			this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cmdCancel.Location = new System.Drawing.Point(169, 157);
+			this.cmdCancel.Location = new System.Drawing.Point(174, 236);
 			this.cmdCancel.Name = "cmdCancel";
 			this.cmdCancel.Size = new System.Drawing.Size(82, 33);
 			this.cmdCancel.TabIndex = 5;
@@ -60,7 +64,7 @@ namespace GCodePlotter
 			// cmdOk
 			// 
 			this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.cmdOk.Location = new System.Drawing.Point(54, 157);
+			this.cmdOk.Location = new System.Drawing.Point(59, 236);
 			this.cmdOk.Name = "cmdOk";
 			this.cmdOk.Size = new System.Drawing.Size(82, 33);
 			this.cmdOk.TabIndex = 6;
@@ -80,14 +84,50 @@ namespace GCodePlotter
 			this.textBox1.Text = "0.1\r\n0.15\r\n0.2";
 			this.textBox1.WordWrap = false;
 			// 
+			// txLayerDepth
+			// 
+			this.txLayerDepth.Location = new System.Drawing.Point(15, 168);
+			this.txLayerDepth.Name = "txLayerDepth";
+			this.txLayerDepth.Size = new System.Drawing.Size(287, 20);
+			this.txLayerDepth.TabIndex = 11;
+			this.txLayerDepth.Text = "0.1";
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(13, 149);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(291, 16);
+			this.label2.TabIndex = 12;
+			this.label2.Text = "Depth of Layer";
+			// 
+			// textBox2
+			// 
+			this.textBox2.Location = new System.Drawing.Point(15, 210);
+			this.textBox2.Name = "textBox2";
+			this.textBox2.Size = new System.Drawing.Size(287, 20);
+			this.textBox2.TabIndex = 11;
+			this.textBox2.Text = "1";
+			// 
+			// label3
+			// 
+			this.label3.Location = new System.Drawing.Point(13, 191);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(291, 16);
+			this.label3.TabIndex = 12;
+			this.label3.Text = "Total Depth";
+			// 
 			// frmLayerEditor
 			// 
 			this.AcceptButton = this.cmdOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.cmdCancel;
-			this.ClientSize = new System.Drawing.Size(316, 207);
+			this.ClientSize = new System.Drawing.Size(316, 278);
 			this.ControlBox = false;
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.textBox2);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.txLayerDepth);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.cmdCancel);
@@ -109,5 +149,9 @@ namespace GCodePlotter
 		private System.Windows.Forms.Button cmdCancel;
 		private System.Windows.Forms.Button cmdOk;
 		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox txLayerDepth;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.Label label3;
 	}
 }
